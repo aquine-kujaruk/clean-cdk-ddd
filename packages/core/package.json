@@ -1,0 +1,16 @@
+{
+  "name": "@packages/core",
+  "version": "1.0.0",
+  "main": "bin/app.ts",
+  "scripts": {
+    "synth": "rm -rf cdk.out && npx cdk synth --all --quiet",
+    "generate:dist": "npx cdk synth --all",
+    "deploy": "rm -rf cdk.out && npx cdk deploy --profile cdk-prisa-dev --all --require-approval never",
+    "destroy": "rm -rf cdk.out && npx cdk destroy --profile cdk-prisa-dev --all",
+    "hotswap": "npx cdk deploy --hotswap --profile cdk-prisa-dev --all"
+  },
+  "dependencies": {
+    "@packages/shared": "1.0.0", 
+    "@packages/support": "1.0.0"
+  }
+}

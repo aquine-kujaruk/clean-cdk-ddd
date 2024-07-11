@@ -1,0 +1,1 @@
+export const generateUserIdentifierWithEntityPrefix = (id: string): string => `user_${id}`;

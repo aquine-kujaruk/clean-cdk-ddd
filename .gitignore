@@ -1,0 +1,24 @@
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+.env
+!.env.example
+deployment-manifest.*
+
+yarn-error.log
+
+lib/poc-examples
+
+!packages/backend/lib/lambda-functions/lambda-layers/code/libraries/nodejs/node_modules
+
+.favorites.json
+
+packages/pocs
+packages/websocket
+packages/revers-proxy-pmin
+

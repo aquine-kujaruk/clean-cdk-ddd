@@ -1,0 +1,9 @@
+{
+  "@packages/core": {
+    "stateMachine": ["CreateUserStateMachine", "CreateUserStateMachineStandard"],
+    "function": ["UserInfraestructureLambda", "UserDomainLambda"]
+  },
+  "@packages/support": {
+    "function": ["EventDispatcherInfraestructureLambda"]
+  }
+}
