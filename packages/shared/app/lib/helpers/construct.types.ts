@@ -17,5 +17,5 @@ export type DynamoDbConstructType = ConstructType<DynamoDbBuilderConstruct>;
 
 export type EventBusConstructType = ConstructType<EventBusBuilderConstruct>;
 
-export type RestApiIntegrationTargetTypes = LambdaConstructType | StateMachineConstructType | EventBusConstructType;
+export type RestApiIntegrationTargetTypes = LambdaConstructType | StateMachineConstructType | EventBusConstructType | DynamoDbConstructType;
 

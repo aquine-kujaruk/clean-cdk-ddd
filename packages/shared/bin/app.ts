@@ -3,7 +3,7 @@
 import { App } from 'aws-cdk-lib';
 import 'source-map-support/register';
 import { Configurations } from '../configurations';
-import { SharedStack } from '../app/shared.stack';
+import { SharedStack } from '../app';
 
 const app = new App();
 

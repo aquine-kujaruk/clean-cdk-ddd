@@ -39,13 +39,13 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
 
   public static getArn(scope: Construct, name: string): string {
     const { region, account } = this.getStack(scope);
-    return `arn:aws:sqs:${region}:${account}:${StateMachineBuilderConstruct.getResourceName(name)}`;
+    return `arn:aws:states:${region}:${account}:stateMachine:${StateMachineBuilderConstruct.getResourceName(name)}`;
   }
 
   public static getImportedResource(scope: Construct, name: string): IStateMachine {
     return StateMachine.fromStateMachineName(
       scope,
-      StateMachineBuilderConstruct.getConstructName(name),
+      StateMachineBuilderConstruct.getUniqueConstructName(name),
       StateMachineBuilderConstruct.getResourceName(name)
     );
   }

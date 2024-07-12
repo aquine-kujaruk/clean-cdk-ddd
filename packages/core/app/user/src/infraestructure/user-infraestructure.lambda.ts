@@ -4,7 +4,7 @@ import { User } from '@packages/shared/app/lib/stateful-resources/databases/dyna
 import { Duration } from 'aws-cdk-lib';
 import { Function } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-import { CoreStackProps } from '../../../core.stack';
+import { CoreStackProps } from '../../..';
 
 export class UserInfraestructureLambda extends NodejsFunctionBuilderConstruct {
   public readonly handler?: Function;

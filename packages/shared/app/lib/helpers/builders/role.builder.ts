@@ -17,7 +17,7 @@ export class RoleBuilderConstruct extends BaseBuilder<Role, RoleBuilderConstruct
   public static getImportedResource(scope: Construct, name: string): IRole {
     return Role.fromRoleName(
       scope,
-      RoleBuilderConstruct.getConstructName(name),
+      RoleBuilderConstruct.getUniqueConstructName(name),
       RoleBuilderConstruct.getResourceName(name)
     );
   }

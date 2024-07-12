@@ -11,6 +11,7 @@ type ControllerRoutesType = Partial<Record<AppEventSources, ControllerClassType>
 
 const controllerRoutes: ControllerRoutesType = {
   [AppEventSources.ARC_RETAIL_WEBSOCKET]: ArcRetailWebsocketEventController,
+  [AppEventSources.PUBLIC_API]: ArcRetailWebsocketEventController,
 };
 
 const triggerUseCase = async ({ body }: { body: string }) => {

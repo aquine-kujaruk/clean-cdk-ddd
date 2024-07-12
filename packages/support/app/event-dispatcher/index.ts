@@ -6,10 +6,11 @@ import { EventDispatcherInfraestructureLambda } from './src/infraestructure/even
 
 export class EventDispatcher {
   constructor(scope: Construct) {
-    new AppEventsQueue(scope);
+    const { queue } = new AppEventsQueue(scope);
     const { bus } = new AppEventsBus(scope);
-    new AppEventRules(scope, { bus });
-    
+
+    new AppEventRules(scope, { bus, queue });
+
     new EventDispatcherInfraestructureLambda(scope);
   }
 }

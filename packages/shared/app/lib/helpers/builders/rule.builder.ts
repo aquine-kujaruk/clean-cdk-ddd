@@ -22,7 +22,7 @@ export class RuleBuilderConstruct extends BaseBuilder<Rule, RuleBuilderConstruct
   public static getImportedResource(scope: Construct, name: string): IRule {
     return Rule.fromEventRuleArn(
       scope,
-      RuleBuilderConstruct.getConstructName(name),
+      RuleBuilderConstruct.getUniqueConstructName(name),
       RuleBuilderConstruct.getArn(scope, name)
     );
   }

@@ -1,6 +1,6 @@
 import { NodejsFunctionBuilderConstruct } from '@packages/shared/app/lib/helpers/builders/nodejs-function.builder';
 import { Construct } from 'constructs';
-import { CoreStackProps } from '../../../core.stack';
+import { CoreStackProps } from '../../..';
 
 export class UserDomainLambda extends NodejsFunctionBuilderConstruct {
   constructor(scope: Construct, props: CoreStackProps) {

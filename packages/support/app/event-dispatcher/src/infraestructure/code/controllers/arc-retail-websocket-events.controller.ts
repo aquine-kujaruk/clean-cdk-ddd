@@ -15,19 +15,21 @@ export type ArcWebsocketEventMessageType = {
 export class ArcRetailWebsocketEventController extends BaseController {
   static async [AppEvents.GIFT_REDEEMED](data: ArcWebsocketEventMessageType) {
     const referenceKeys = ['gifterAccountID', 'redeemerAccountID'];
-
-    const eventDbRepository = new EventDbRepository();
-    await eventDbRepository.save(data, referenceKeys);
-  }
-
-  static async [AppEvents.REDEEM_SHARED_SUBSCRIPTION](data: ArcWebsocketEventMessageType) {
-    const referenceKeys = ['parentAccountID', 'associateAccountID'];
-    const target = process.env.CREATE_USER_STATE_MACHINE_ARN as string
+    const target = process.env.CREATE_USER_STATE_MACHINE_ARN as string;
 
     const eventDbRepository = new EventDbRepository();
     await eventDbRepository.save(data, referenceKeys);
 
     const awsStepFunctionRepository = new AwsStepFunctionRepository();
-    await awsStepFunctionRepository.invokeAsyncExecution(target, data);
+    await awsStepFunctionRepository.invokeAsyncExecution(target, {
+      body: { name: data.detail.message.gifterAccountID },
+    });
+  }
+
+  static async [AppEvents.REDEEM_SHARED_SUBSCRIPTION](data: ArcWebsocketEventMessageType) {
+    const referenceKeys = ['parentAccountID', 'associateAccountID'];
+
+    const eventDbRepository = new EventDbRepository();
+    await eventDbRepository.save(data, referenceKeys);
   }
 }

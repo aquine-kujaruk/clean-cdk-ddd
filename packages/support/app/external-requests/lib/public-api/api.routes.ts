@@ -13,6 +13,11 @@ const routes: RestApiRouteType<AppRequestType>[] = [
     path: 'user/event/create-user',
     methods: [HttpMethod.POST],
   },
+  {
+    request: AppRequests.GET_USER,
+    path: 'user/query/get-user/{eventType}',
+    methods: [HttpMethod.GET],
+  }
 ];
 
 export default routes;

@@ -3,11 +3,17 @@ import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { Construct } from 'constructs';
 import { LambdaConstructType, RestApiIntegrationTargetTypes } from '../construct.types';
 import { RestApiIntegration } from './integration';
+import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 
 // Integration types
 export interface RestApiRequestIntegrationsProps {
   target: RestApiIntegrationTargetTypes;
   authorizer?: LambdaConstructType;
+}
+
+export interface RestApiRequestDynamoDbIntegrationsProps extends RestApiRequestIntegrationsProps {
+  query: Omit<QueryCommandInput, 'TableName'>;
+  responseDefinition?: string;
 }
 
 export interface RestApiIntegrationProps {
@@ -16,7 +22,6 @@ export interface RestApiIntegrationProps {
   httpMethod: HttpMethod;
   apiEventSource: string;
 }
-
 
 export type RestApiRouteDefinitionType = {
   [key in HttpMethod]?: (scope: Construct, props: RestApiIntegrationProps) => RestApiIntegration;

@@ -15,6 +15,7 @@ export class RestApiIntegrationRole extends RoleBuilderConstruct {
                 'dynamodb:PutItem',
                 'dynamodb:GetItem',
                 'dynamodb:DeleteItem',
+                'dynamodb:Query',
                 'events:PutEvents',
               ],
               effect: Effect.ALLOW,

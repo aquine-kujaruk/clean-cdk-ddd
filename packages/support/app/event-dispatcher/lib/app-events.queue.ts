@@ -16,6 +16,8 @@ class DlqAppEventsQueue extends QueueBuilderConstruct {
 }
 
 export class AppEventsQueue extends QueueBuilderConstruct {
+  public readonly queue: Queue;
+
   constructor(scope: Construct) {
     const dlQueue = new DlqAppEventsQueue(scope).queue;
 
@@ -28,6 +30,6 @@ export class AppEventsQueue extends QueueBuilderConstruct {
       },
     });
 
-    this.build();
+    this.queue = this.build();
   }
 }

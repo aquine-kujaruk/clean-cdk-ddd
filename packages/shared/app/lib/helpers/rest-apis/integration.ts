@@ -1,3 +1,4 @@
+import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 import { LambdaBuilderConstruct } from '@packages/shared/app/lib/helpers/builders/lambda.builder';
 import { StateMachineBuilderConstruct } from '@packages/shared/app/lib/helpers/builders/state-machine.builder';
 import {
@@ -6,11 +7,13 @@ import {
   LambdaIntegration,
   MethodOptions,
   Model,
+  PassthroughBehavior,
   StepFunctionsIntegration,
 } from 'aws-cdk-lib/aws-apigateway';
 import { IFunction } from 'aws-cdk-lib/aws-lambda';
 import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
+import { RestApiIntegrationRole } from '../../stateful-resources/iam/roles/rest-api-integration.role';
 import { DynamoDbBuilderConstruct } from '../builders/dynamo-db.builder';
 import { EventBusBuilderConstruct } from '../builders/event-bus.builder';
 import { RoleBuilderConstruct } from '../builders/role.builder';
@@ -20,8 +23,11 @@ import {
   LambdaConstructType,
   StateMachineConstructType,
 } from '../construct.types';
-import { RestApiIntegrationProps, RestApiRequestIntegrationsProps } from './rest-api.types';
-import { RestApiIntegrationRole } from '../../stateful-resources/iam/roles/rest-api-integration.role';
+import {
+  RestApiIntegrationProps,
+  RestApiRequestDynamoDbIntegrationsProps,
+  RestApiRequestIntegrationsProps,
+} from './rest-api.types';
 
 export abstract class RestApiIntegration {
   protected handler: IStateMachine | IFunction;
@@ -40,7 +46,30 @@ export abstract class RestApiIntegration {
       else apiResource = this.props.api.root.getResource(resourceString);
     }
 
-    apiResource?.addMethod(this.props.httpMethod, integration);
+    apiResource?.addMethod(this.props.httpMethod, integration, options);
+  }
+
+  protected get awsDefaultIntegrationResponses() {
+    return [
+      {
+        selectionPattern: '400',
+        statusCode: '400',
+        responseTemplates: {
+          'application/json': JSON.stringify({
+            error: 'Bad input!',
+          }),
+        },
+      },
+      {
+        selectionPattern: '5\\d{2}',
+        statusCode: '500',
+        responseTemplates: {
+          'application/json': JSON.stringify({
+            error: 'Internal Service Error!',
+          }),
+        },
+      },
+    ];
   }
 }
 
@@ -78,9 +107,11 @@ export class RestApiLambdaIntegration extends RestApiIntegration {
   }
 }
 
-// https://dev.to/aws-builders/look-ma-no-lambda-lambdaless-apigateway-and-dynamodb-integration-with-cdk-2hbd
 export class RestApiDaynamoDbIntegration extends RestApiIntegration {
-  constructor(scope: Construct, props: RestApiIntegrationProps & RestApiRequestIntegrationsProps) {
+  constructor(
+    scope: Construct,
+    props: RestApiIntegrationProps & RestApiRequestDynamoDbIntegrationsProps
+  ) {
     super(scope, props);
 
     const TableName = DynamoDbBuilderConstruct.getResourceName(props.target.name);
@@ -91,44 +122,26 @@ export class RestApiDaynamoDbIntegration extends RestApiIntegration {
 
     const integration = new AwsIntegration({
       service: 'dynamodb',
-      action: 'GetItem',
+      action: 'Query',
+      integrationHttpMethod: 'POST',
       options: {
+        passthroughBehavior: PassthroughBehavior.WHEN_NO_TEMPLATES,
         credentialsRole,
-        integrationResponses: [
-          {
-            statusCode: '200',
-            responseTemplates: {
-              'application/json': `
-                #set($inputRoot = $input.path('$'))
-                #if($inputRoot.Item.size() == 0)
-                  #set($context.responseOverride.status = 404)
-                  { "message": "Item not found" }
-                #else
-                  #set($context.responseOverride.status = 200)
-                  $input.json('$')
-                #end
-            `,
-            },
-          },
-          {
-            selectionPattern: '400',
-            statusCode: '400',
-            responseTemplates: { 'application/json': `{ "error": "Bad input!" }` },
-          },
-          {
-            selectionPattern: '5\\d{2}',
-            statusCode: '500',
-            responseTemplates: { 'application/json': `{ "error": "Internal Service Error!" }` },
-          },
-        ],
         requestTemplates: {
           'application/json': JSON.stringify({
             TableName,
-            Key: {
-              id: { S: '$method.request.path.userId' },
-            },
+            ...props.query,
           }),
         },
+        integrationResponses: [
+          ...this.awsDefaultIntegrationResponses,
+          {
+            statusCode: '200',
+            responseTemplates: {
+              'application/json': props.responseDefinition || "$input.path('$.Items')",
+            },
+          },
+        ],
       },
     });
 
@@ -140,13 +153,17 @@ export class RestApiDaynamoDbIntegration extends RestApiIntegration {
             'application/json': Model.EMPTY_MODEL,
           },
         },
-        { statusCode: '400' },
-        { statusCode: '500' },
       ],
     });
   }
 
-  static build(requestProps: RestApiRequestIntegrationsProps & { target: DynamoDbConstructType }) {
+  static build(
+    requestProps: RestApiRequestDynamoDbIntegrationsProps & {
+      target: DynamoDbConstructType;
+      query: Omit<QueryCommandInput, 'TableName'>;
+      responseDefinition?: string;
+    }
+  ) {
     return (scope: Construct, props: RestApiIntegrationProps) =>
       new RestApiDaynamoDbIntegration(scope, { ...props, ...requestProps });
   }
@@ -169,26 +186,13 @@ export class RestApiEventBusIntegration extends RestApiIntegration {
       options: {
         credentialsRole,
         integrationResponses: [
+          ...this.awsDefaultIntegrationResponses,
           {
             statusCode: '200',
             responseTemplates: {
               'application/json': JSON.stringify({
                 id: "$input.path('$.Entries[0].EventId')",
               }),
-            },
-          },
-          {
-            statusCode: '400',
-            selectionPattern: '4\\d{2}',
-            responseTemplates: {
-              'application/json': JSON.stringify({ message: 'Bad request' }),
-            },
-          },
-          {
-            statusCode: '500',
-            selectionPattern: '5\\d{2}',
-            responseTemplates: {
-              'application/json': JSON.stringify({ message: 'Internal server error' }),
             },
           },
         ],
@@ -199,7 +203,8 @@ export class RestApiEventBusIntegration extends RestApiIntegration {
             ${JSON.stringify({
               Entries: [
                 {
-                  Detail: "$util.escapeJavaScript($input.json('$'))",
+                  Detail:
+                    '{ "index": $context.requestTimeEpoch,"message": $util.escapeJavaScript($input.json(\'$\')) }',
                   DetailType: 'GIFT_REDEEMED',
                   EventBusName,
                   Source: props.apiEventSource,

@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "dist",
   },
-  "include": ["app/**/*", "bin/app.ts", "configurations"]
+  "include": ["app/**/*", "bin/app.ts", "configurations/**/*"]
 }
