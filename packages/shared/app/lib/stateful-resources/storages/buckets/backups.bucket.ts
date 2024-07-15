@@ -5,6 +5,6 @@ export class Backups extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Backups.name, {});
 
-    this.build();
+    super.build();
   }
 }

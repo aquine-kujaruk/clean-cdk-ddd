@@ -10,7 +10,7 @@ export class BucketBuilderConstruct extends BaseBuilder<Bucket, BucketProps> {
   }
 
   public static getResourceName(name: string): string {
-    return this.getStatefulResourceName(name.toLowerCase());
+    return BaseBuilder.getStatefulResourceName(name.toLowerCase());
   }
 
   public build(): Bucket {

@@ -9,7 +9,7 @@ export class SecretBuilderConstruct extends BaseBuilder<Secret, SecretProps> {
   }
 
   public static getResourceName(name: string): string {
-    return this.getStatefulResourceName(name);
+    return BaseBuilder.getStatefulResourceName(name);
   }
 
   public build(): Secret {

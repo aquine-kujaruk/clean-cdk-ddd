@@ -5,6 +5,6 @@ export class MerchantOrder extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, MerchantOrder.name, {});
 
-    this.build();
+    super.build();
   }
 }

@@ -9,6 +9,6 @@ export class UserDomainLambda extends NodejsFunctionBuilderConstruct {
       environment: props.environment,
     });
 
-    this.build();
+    super.build();
   }
 }

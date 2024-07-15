@@ -6,6 +6,6 @@ export class Region extends DynamoDbBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Region.name, { partitionKey: { name: 'id', type: AttributeType.STRING } });
 
-    this.build();
+    super.build();
   }
 }

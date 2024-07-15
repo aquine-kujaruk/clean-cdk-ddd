@@ -17,7 +17,7 @@ export class AppEventsRule extends RuleBuilderConstruct {
       targets: AppEventsRule.getTargets(scope, props),
     });
 
-    this.build();
+    super.build();
   }
 
   private static getTargets = (scope: Construct, props: RulesProps) => {

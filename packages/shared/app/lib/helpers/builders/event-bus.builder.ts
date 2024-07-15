@@ -9,15 +9,15 @@ export class EventBusBuilderConstruct extends BaseBuilder<EventBus, EventBusProp
   }
 
   public static getResourceName(name: string): string {
-    return this.getStatelessResourceName(name);
+    return BaseBuilder.getStatelessResourceName(name);
   }
 
   public static getImportedResource(scope: Construct, name: string): IEventBus {
-    const stack = this.getStack(scope);
+    const stack = BaseBuilder.getStack(scope);
     stack.getLogicalId;
     return EventBus.fromEventBusName(
       scope,
-      EventBusBuilderConstruct.getUniqueConstructName(name),
+      BaseBuilder.getUniqueConstructName(name),
       EventBusBuilderConstruct.getResourceName(name)
     );
   }

@@ -8,6 +8,6 @@ export class ReusableBundleCodes extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'code', type: AttributeType.STRING },
     });
 
-    this.build();
+    super.build();
   }
 }

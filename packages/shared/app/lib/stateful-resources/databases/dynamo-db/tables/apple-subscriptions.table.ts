@@ -8,6 +8,6 @@ export class AppleSubscriptions extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'original_transaction_id', type: AttributeType.STRING },
     });
 
-    this.build();
+    super.build();
   }
 }

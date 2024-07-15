@@ -5,6 +5,6 @@ export class Financial extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Financial.name, {});
 
-    this.build();
+    super.build();
   }
 }

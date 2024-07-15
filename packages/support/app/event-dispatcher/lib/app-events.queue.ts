@@ -11,7 +11,7 @@ class DlqAppEventsQueue extends QueueBuilderConstruct {
       retentionPeriod: Duration.days(14),
     });
 
-    this.queue = this.build();
+    this.queue = super.build();
   }
 }
 
@@ -30,6 +30,6 @@ export class AppEventsQueue extends QueueBuilderConstruct {
       },
     });
 
-    this.queue = this.build();
+    this.queue = super.build();
   }
 }

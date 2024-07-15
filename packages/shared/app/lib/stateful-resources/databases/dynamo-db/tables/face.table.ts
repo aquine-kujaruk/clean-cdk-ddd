@@ -6,6 +6,6 @@ export class Face extends DynamoDbBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Face.name, { partitionKey: { name: 'id', type: AttributeType.STRING } });
 
-    this.build();
+    super.build();
   }
 }

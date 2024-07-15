@@ -4,16 +4,24 @@ import { Construct } from 'constructs';
 import { LambdaConstructType, RestApiIntegrationTargetTypes } from '../construct.types';
 import { RestApiIntegration } from './integration';
 import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
+import { ControllerClassType } from '@packages/shared/app/src/infraestructure/controllers/base.controller';
 
 // Integration types
 export interface RestApiRequestIntegrationsProps {
   target: RestApiIntegrationTargetTypes;
-  authorizer?: LambdaConstructType;
+  authorizerFunction?: LambdaConstructType;
 }
 
 export interface RestApiRequestDynamoDbIntegrationsProps extends RestApiRequestIntegrationsProps {
   query: Omit<QueryCommandInput, 'TableName'>;
-  responseDefinition?: string;
+  selectedFields?: Record<string, string>;
+}
+
+export interface RestApiRequestLambdaIntegrationsProps extends RestApiRequestIntegrationsProps {
+  handlerProps: {
+    controller: ControllerClassType;
+    methodName: string;
+  };
 }
 
 export interface RestApiIntegrationProps {

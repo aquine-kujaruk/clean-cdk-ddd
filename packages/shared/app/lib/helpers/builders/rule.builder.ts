@@ -11,18 +11,18 @@ export class RuleBuilderConstruct extends BaseBuilder<Rule, RuleBuilderConstruct
   }
 
   public static getResourceName(name: string): string {
-    return this.getStatelessResourceName(name);
+    return BaseBuilder.getStatelessResourceName(name);
   }
 
   public static getArn(scope: Construct, name: string): string {
-    const { region, account } = this.getStack(scope);
+    const { region, account } = BaseBuilder.getStack(scope);
     return `arn:aws:events:${region}:${account}:rule:${RuleBuilderConstruct.getResourceName(name)}`;
   }
 
   public static getImportedResource(scope: Construct, name: string): IRule {
     return Rule.fromEventRuleArn(
       scope,
-      RuleBuilderConstruct.getUniqueConstructName(name),
+      BaseBuilder.getUniqueConstructName(name),
       RuleBuilderConstruct.getArn(scope, name)
     );
   }

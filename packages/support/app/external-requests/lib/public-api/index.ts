@@ -13,6 +13,6 @@ export class PublicApi extends RestApiBuilderConstruct<AppRequestType> {
       apiEventSource: AppEventSources.PUBLIC_API,
     });
 
-    this.build();
+    super.build();
   }
 }

@@ -8,7 +8,7 @@ export class BillingType extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'subscriptionID', type: AttributeType.STRING },
     });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

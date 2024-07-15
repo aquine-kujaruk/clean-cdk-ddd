@@ -6,7 +6,7 @@ export class LinkedProducts extends DynamoDbBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, LinkedProducts.name, { partitionKey: { name: 'id', type: AttributeType.STRING } });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

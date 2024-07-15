@@ -17,6 +17,11 @@ const routes: RestApiRouteType<AppRequestType>[] = [
     request: AppRequests.GET_USER,
     path: 'user/query/get-user/{eventType}',
     methods: [HttpMethod.GET],
+  },
+  {
+    request: AppRequests.GET_UUID,
+    path: 'user/query/get-uuid/{param}',
+    methods: [HttpMethod.POST],
   }
 ];
 

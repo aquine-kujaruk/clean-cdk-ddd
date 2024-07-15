@@ -25,6 +25,6 @@ export class RestApiIntegrationRole extends RoleBuilderConstruct {
       },
     });
 
-    this.build();
+    super.build();
   }
 }

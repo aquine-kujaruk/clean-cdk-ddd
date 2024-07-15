@@ -22,6 +22,6 @@ export class UserInfraestructureLambda extends NodejsFunctionBuilderConstruct {
       },
     });
 
-    this.build();
+    super.build();
   }
 }

@@ -11,7 +11,7 @@ export class Every12HoursCronRule extends RuleBuilderConstruct {
       targets: Every12HoursCronRule.getTargets(scope),
     });
 
-    this.build();
+    super.build();
   }
 
   private static getTargets = (scope: Construct) => [];

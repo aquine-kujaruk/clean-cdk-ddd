@@ -10,7 +10,7 @@ export class EventStoreTable extends DynamoDbBuilderConstruct {
       timeToLiveAttribute: 'ttl',
     });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

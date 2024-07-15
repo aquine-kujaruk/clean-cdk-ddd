@@ -6,6 +6,6 @@ export class ProcessingUnit extends DynamoDbBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, ProcessingUnit.name, { partitionKey: { name: 'id', type: AttributeType.STRING } });
 
-    this.build();
+    super.build();
   }
 }

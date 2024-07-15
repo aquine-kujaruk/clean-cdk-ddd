@@ -11,7 +11,7 @@ export class DynamoDbBuilderConstruct extends BaseBuilder<Table, TableProps> {
   }
 
   public static getResourceName(name: string): string {
-    return this.getStatefulResourceName(name);
+    return BaseBuilder.getStatefulResourceName(name);
   }
 
   public build(): Table {

@@ -6,6 +6,6 @@ export class Agency extends DynamoDbBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Agency.name, { partitionKey: { name: 'id', type: AttributeType.STRING } });
 
-    this.build();
+    super.build();
   }
 }

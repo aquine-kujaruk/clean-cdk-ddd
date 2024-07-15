@@ -8,7 +8,7 @@ export class MerchantOrderDetail extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'gatewayId', type: AttributeType.STRING },
     });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

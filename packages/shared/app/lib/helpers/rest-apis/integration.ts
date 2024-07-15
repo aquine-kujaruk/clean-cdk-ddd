@@ -2,12 +2,15 @@ import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 import { LambdaBuilderConstruct } from '@packages/shared/app/lib/helpers/builders/lambda.builder';
 import { StateMachineBuilderConstruct } from '@packages/shared/app/lib/helpers/builders/state-machine.builder';
 import {
+  AuthorizationType,
   AwsIntegration,
   IResource,
+  IdentitySource,
   LambdaIntegration,
   MethodOptions,
   Model,
   PassthroughBehavior,
+  RequestAuthorizer,
   StepFunctionsIntegration,
 } from 'aws-cdk-lib/aws-apigateway';
 import { IFunction } from 'aws-cdk-lib/aws-lambda';
@@ -27,23 +30,53 @@ import {
   RestApiIntegrationProps,
   RestApiRequestDynamoDbIntegrationsProps,
   RestApiRequestIntegrationsProps,
+  RestApiRequestLambdaIntegrationsProps,
 } from './rest-api.types';
+import { Duration } from 'aws-cdk-lib';
+import { BaseBuilder } from '../builders/base.builder';
 
 export abstract class RestApiIntegration {
   protected handler: IStateMachine | IFunction;
 
   constructor(
     protected readonly scope: Construct,
-    protected readonly props: RestApiIntegrationProps
+    protected readonly props: RestApiIntegrationProps & RestApiRequestIntegrationsProps
   ) {}
 
-  protected addMethod(integration: AwsIntegration, options?: MethodOptions) {
+  protected addMethod(integration: AwsIntegration, options: MethodOptions = {}) {
     const pathArray = this.props.path.split('/');
     let apiResource: IResource | undefined;
 
     for (const resourceString of pathArray) {
       if (apiResource) apiResource = apiResource.getResource(resourceString);
       else apiResource = this.props.api.root.getResource(resourceString);
+    }
+
+    if (this.props.authorizerFunction) {
+      const handler = LambdaBuilderConstruct.getImportedResource(
+        this.scope,
+        this.props.authorizerFunction.name
+      );
+
+      const authorizerName = `${this.props.authorizerFunction.name}Authorizer`;
+
+      const authorizer = new RequestAuthorizer(
+        this.scope,
+        BaseBuilder.getConstructName(authorizerName),
+        {
+          authorizerName: BaseBuilder.getStatelessResourceName(authorizerName),
+          handler,
+          identitySources: [IdentitySource.header('authorization')],
+          resultsCacheTtl: Duration.seconds(0),
+        }
+      );
+
+      options = {
+        ...options,
+        authorizer,
+        authorizationType: AuthorizationType.CUSTOM,
+        
+      };
     }
 
     apiResource?.addMethod(this.props.httpMethod, integration, options);
@@ -80,7 +113,7 @@ export class RestApiSfnIntegration extends RestApiIntegration {
     const handler = StateMachineBuilderConstruct.getImportedResource(this.scope, props.target.name);
 
     const integration = StepFunctionsIntegration.startExecution(handler);
-    this.addMethod(integration);
+    super.addMethod(integration);
   }
 
   static build(
@@ -92,16 +125,75 @@ export class RestApiSfnIntegration extends RestApiIntegration {
 }
 
 export class RestApiLambdaIntegration extends RestApiIntegration {
-  constructor(scope: Construct, props: RestApiIntegrationProps & RestApiRequestIntegrationsProps) {
+  constructor(
+    scope: Construct,
+    props: RestApiIntegrationProps & RestApiRequestLambdaIntegrationsProps
+  ) {
     super(scope, props);
 
     const handler = LambdaBuilderConstruct.getImportedResource(this.scope, props.target.name);
 
-    const integration = new LambdaIntegration(handler);
-    this.addMethod(integration);
+    const integration = new LambdaIntegration(handler, {
+      proxy: false,
+      passthroughBehavior: PassthroughBehavior.WHEN_NO_MATCH,
+      requestTemplates: {
+        'application/json': `
+        #set($inputRoot = $input.path('$'))
+        {
+          "input": {
+            "body": $input.json('$'),
+            "headers": {
+              #foreach($header in $input.params().header.keySet())
+                "$header": "$input.params().header.get($header)"#if($foreach.hasNext),#end
+              #end
+            },
+            "path": {
+              #foreach($param in $input.params().path.keySet())
+                "$param": "$input.params().path.get($param)"#if($foreach.hasNext),#end
+              #end
+            },
+            "query": {
+              #foreach($queryParam in $input.params().querystring.keySet())
+                "$queryParam": "$input.params().querystring.get($queryParam)"#if($foreach.hasNext),#end
+              #end
+            },
+            "authorizerContext": {
+              #foreach($contextKey in $context.authorizer.keySet())
+                "$contextKey": "$context.authorizer.get($contextKey)"#if($foreach.hasNext),#end
+              #end
+            }
+          },
+          "controller": "${props.handlerProps.controller.name}",
+          "methodName": "${props.handlerProps.methodName}"
+        }
+      `,
+      },
+      integrationResponses: [
+        ...super.awsDefaultIntegrationResponses,
+        {
+          statusCode: '200',
+          responseTemplates: {
+            'application/json': "$input.path('$')",
+          },
+        },
+      ],
+    });
+
+    super.addMethod(integration, {
+      methodResponses: [
+        {
+          statusCode: '200',
+          responseModels: {
+            'application/json': Model.EMPTY_MODEL,
+          },
+        },
+      ],
+    });
   }
 
-  static build(requestProps: RestApiRequestIntegrationsProps & { target: LambdaConstructType }) {
+  static build(
+    requestProps: RestApiRequestLambdaIntegrationsProps & { target: LambdaConstructType }
+  ) {
     return (scope: Construct, props: RestApiIntegrationProps) =>
       new RestApiLambdaIntegration(scope, { ...props, ...requestProps });
   }
@@ -120,6 +212,27 @@ export class RestApiDaynamoDbIntegration extends RestApiIntegration {
       RestApiIntegrationRole.name
     );
 
+    let successfulIntegrationResponse = {
+      statusCode: '200',
+      responseTemplates: {
+        'application/json': "$input.path('$.Items')",
+      },
+    };
+
+    if (props.selectedFields) {
+      successfulIntegrationResponse.responseTemplates['application/json'] = `
+        #set($inputRoot = $input.path('$'))
+        {
+        "response": [
+            #foreach($field in $inputRoot.Items) 
+              ${JSON.stringify(props.selectedFields)}
+              #if($foreach.hasNext),#end
+            #end
+          ]
+        }
+      `;
+    }
+
     const integration = new AwsIntegration({
       service: 'dynamodb',
       action: 'Query',
@@ -134,18 +247,13 @@ export class RestApiDaynamoDbIntegration extends RestApiIntegration {
           }),
         },
         integrationResponses: [
-          ...this.awsDefaultIntegrationResponses,
-          {
-            statusCode: '200',
-            responseTemplates: {
-              'application/json': props.responseDefinition || "$input.path('$.Items')",
-            },
-          },
+          ...super.awsDefaultIntegrationResponses,
+          successfulIntegrationResponse,
         ],
       },
     });
 
-    this.addMethod(integration, {
+    super.addMethod(integration, {
       methodResponses: [
         {
           statusCode: '200',
@@ -161,7 +269,7 @@ export class RestApiDaynamoDbIntegration extends RestApiIntegration {
     requestProps: RestApiRequestDynamoDbIntegrationsProps & {
       target: DynamoDbConstructType;
       query: Omit<QueryCommandInput, 'TableName'>;
-      responseDefinition?: string;
+      selectedFields?: Record<string, string>;
     }
   ) {
     return (scope: Construct, props: RestApiIntegrationProps) =>
@@ -186,7 +294,7 @@ export class RestApiEventBusIntegration extends RestApiIntegration {
       options: {
         credentialsRole,
         integrationResponses: [
-          ...this.awsDefaultIntegrationResponses,
+          ...super.awsDefaultIntegrationResponses,
           {
             statusCode: '200',
             responseTemplates: {
@@ -216,7 +324,7 @@ export class RestApiEventBusIntegration extends RestApiIntegration {
       },
     });
 
-    this.addMethod(integration, {
+    super.addMethod(integration, {
       methodResponses: [
         {
           statusCode: '200',

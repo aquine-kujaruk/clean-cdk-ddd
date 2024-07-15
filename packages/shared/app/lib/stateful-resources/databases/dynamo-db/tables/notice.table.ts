@@ -6,6 +6,6 @@ export class Notice extends DynamoDbBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Notice.name, { partitionKey: { name: 'id', type: AttributeType.STRING } });
 
-    this.build();
+    super.build();
   }
 }

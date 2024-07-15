@@ -8,7 +8,7 @@ export class RegisterInvoiceHistory extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'id', type: AttributeType.STRING },
     });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

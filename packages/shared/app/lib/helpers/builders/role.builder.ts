@@ -11,13 +11,13 @@ export class RoleBuilderConstruct extends BaseBuilder<Role, RoleBuilderConstruct
   }
 
   public static getResourceName(name: string): string {
-    return this.getStatefulResourceName(name);
+    return BaseBuilder.getStatefulResourceName(name);
   }
 
   public static getImportedResource(scope: Construct, name: string): IRole {
     return Role.fromRoleName(
       scope,
-      RoleBuilderConstruct.getUniqueConstructName(name),
+      BaseBuilder.getUniqueConstructName(name),
       RoleBuilderConstruct.getResourceName(name)
     );
   }

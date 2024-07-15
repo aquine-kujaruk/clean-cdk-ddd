@@ -9,6 +9,6 @@ export class CreateUserStateMachine extends StateMachineBuilderConstruct {
       definitionJob: Definition,
     });
 
-    this.build();
+    super.build();
   }
 }

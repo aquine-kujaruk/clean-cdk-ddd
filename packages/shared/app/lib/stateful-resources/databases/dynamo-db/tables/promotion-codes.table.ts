@@ -8,7 +8,7 @@ export class PromotionCodes extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'key', type: AttributeType.STRING },
     });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

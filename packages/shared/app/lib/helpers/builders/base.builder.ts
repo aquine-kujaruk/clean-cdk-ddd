@@ -42,7 +42,7 @@ export abstract class BaseBuilder<T, P> extends Construct {
     return pascalCase(name);
   }
 
-  protected static getUniqueConstructName(name: string): string {
+  public static getUniqueConstructName(name: string): string {
     return pascalCase(name) + ulid();
   }
 

@@ -5,6 +5,6 @@ export class Docgenerator extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Docgenerator.name, {});
 
-    this.build();
+    super.build();
   }
 }

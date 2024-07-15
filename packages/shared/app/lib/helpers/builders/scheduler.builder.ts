@@ -8,7 +8,7 @@ export class SchedulerBuilderConstruct extends BaseBuilder<Rule, RuleProps> {
   }
 
   public static getResourceName(name: string): string {
-    return SchedulerBuilderConstruct.getStatelessResourceName(name);
+    return BaseBuilder.getStatelessResourceName(name);
   }
 
   public static createResource(scope: Construct, name: string, schedule: Schedule): Rule {

@@ -8,6 +8,6 @@ export class AppEventsBus extends EventBusBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, AppEventsBus.name, {});
 
-    this.bus = this.build();
+    this.bus = super.build();
   }
 }

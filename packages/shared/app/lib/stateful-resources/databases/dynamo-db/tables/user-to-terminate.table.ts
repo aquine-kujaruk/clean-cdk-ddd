@@ -8,6 +8,6 @@ export class UserToTerminate extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'id', type: AttributeType.STRING },
     });
 
-    this.build();
+    super.build();
   }
 }

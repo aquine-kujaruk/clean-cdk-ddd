@@ -5,6 +5,6 @@ export class Refund extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Refund.name, {});
 
-    this.build();
+    super.build();
   }
 }

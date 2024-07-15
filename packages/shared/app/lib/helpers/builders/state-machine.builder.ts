@@ -34,18 +34,18 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
   }
 
   public static getResourceName(name: string): string {
-    return StateMachineBuilderConstruct.getStatelessResourceName(name);
+    return BaseBuilder.getStatelessResourceName(name);
   }
 
   public static getArn(scope: Construct, name: string): string {
-    const { region, account } = this.getStack(scope);
+    const { region, account } = BaseBuilder.getStack(scope);
     return `arn:aws:states:${region}:${account}:stateMachine:${StateMachineBuilderConstruct.getResourceName(name)}`;
   }
 
   public static getImportedResource(scope: Construct, name: string): IStateMachine {
     return StateMachine.fromStateMachineName(
       scope,
-      StateMachineBuilderConstruct.getUniqueConstructName(name),
+      BaseBuilder.getUniqueConstructName(name),
       StateMachineBuilderConstruct.getResourceName(name)
     );
   }
@@ -64,7 +64,7 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
   }
 
   public build(): StateMachine | undefined {
-    if (!this.isActive('stateMachine')) return;
+    if (!super.isActive('stateMachine')) return;
 
     const stateMachineProps = this.props;
 

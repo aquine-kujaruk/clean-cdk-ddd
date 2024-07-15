@@ -12,28 +12,28 @@ export class LambdaBuilderConstruct extends BaseBuilder<Function, FunctionProps>
   }
 
   public static getResourceName(name: string): string {
-    return LambdaBuilderConstruct.getStatelessResourceName(name);
+    return BaseBuilder.getStatelessResourceName(name);
   }
 
   public static getArn(scope: Construct, name: string): string {
-    const { region, account } = this.getStack(scope);
+    const { region, account } = BaseBuilder.getStack(scope);
     return `arn:aws:lambda:${region}:${account}:function:${LambdaBuilderConstruct.getResourceName(
       name
     )}`;
   }
 
   public static getImportedResource(scope: Construct, name: string): IFunction {
-    const stack = this.getStack(scope);
+    const stack = BaseBuilder.getStack(scope);
     stack.getLogicalId;
     return Function.fromFunctionName(
       scope,
-      LambdaBuilderConstruct.getUniqueConstructName(name),
+      BaseBuilder.getUniqueConstructName(name),
       LambdaBuilderConstruct.getResourceName(name)
     );
   }
 
   public build(): Function | undefined {
-    if (!this.isActive('function')) return;
+    if (!super.isActive('function')) return;
 
     const functionName = LambdaBuilderConstruct.getResourceName(this.id);
 

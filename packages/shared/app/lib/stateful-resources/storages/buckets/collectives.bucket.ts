@@ -5,6 +5,6 @@ export class Collectives extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Collectives.name, {});
 
-    this.build();
+    super.build();
   }
 }

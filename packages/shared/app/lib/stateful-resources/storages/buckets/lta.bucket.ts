@@ -5,6 +5,6 @@ export class Lta extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Lta.name, {});
 
-    this.build();
+    super.build();
   }
 }

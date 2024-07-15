@@ -30,7 +30,7 @@ export class EventDispatcherInfraestructureLambda extends NodejsFunctionBuilderC
       },
     });
 
-    const target = this.build() as IFunction;
+    const target = super.build() as IFunction;
 
     if (target) {
       new EventSourceMapping(

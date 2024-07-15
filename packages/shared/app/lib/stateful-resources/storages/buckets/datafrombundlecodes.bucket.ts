@@ -5,6 +5,6 @@ export class Datafrombundlecodes extends BucketBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Datafrombundlecodes.name, {});
 
-    this.build();
+    super.build();
   }
 }

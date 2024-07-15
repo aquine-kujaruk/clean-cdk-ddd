@@ -70,7 +70,7 @@ export default class extends ChainableSfnDefinition {
       payloadResponseOnly: true,
       payload: LambdaTaskInput.fromObject({
         controller: UserInfraestructureController,
-        methodName: UserInfraestructureController.getTimestamp.name,
+        methodName: UserInfraestructureController.generateUuid.name,
       }),
     }).addCatch(this.fail);
   }

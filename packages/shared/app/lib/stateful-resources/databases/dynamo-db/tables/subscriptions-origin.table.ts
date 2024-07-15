@@ -8,6 +8,6 @@ export class SubscriptionsOrigin extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'idSuscripcionArc', type: AttributeType.STRING },
     });
 
-    this.build();
+    super.build();
   }
 }

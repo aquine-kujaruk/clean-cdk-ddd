@@ -40,6 +40,6 @@ export class StateMachineRole extends RoleBuilderConstruct {
       },
     });
 
-    this.build();
+    super.build();
   }
 }

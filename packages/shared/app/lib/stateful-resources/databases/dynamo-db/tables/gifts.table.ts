@@ -6,7 +6,7 @@ export class Gifts extends DynamoDbBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, Gifts.name, { partitionKey: { name: 'redeemToken', type: AttributeType.STRING } });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

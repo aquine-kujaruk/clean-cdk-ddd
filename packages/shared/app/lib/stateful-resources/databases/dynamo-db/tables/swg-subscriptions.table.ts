@@ -8,7 +8,7 @@ export class SwgSubscriptions extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'purchaseToken', type: AttributeType.STRING },
     });
 
-    const table = this.build();
+    const table = super.build();
 
     this.createIndexes(table);
   }

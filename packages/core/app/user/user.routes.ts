@@ -2,6 +2,7 @@ import {
   RestApiEventBusIntegration,
   RestApiSfnIntegration,
   RestApiDaynamoDbIntegration,
+  RestApiLambdaIntegration,
 } from '@packages/shared/app/lib/helpers/rest-apis/integration';
 import { RestApiAppRoutesType } from '@packages/shared/app/lib/helpers/rest-apis/rest-api.types';
 import { AppEventsBus } from '@packages/support/app/event-dispatcher/lib/app-events.bus';
@@ -12,6 +13,9 @@ import { UserCommands } from './user.commands';
 import { UserEvents } from './user.events';
 import { UserQueries } from './user.queries';
 import { EventStoreTable } from '@packages/shared/app/lib/stateful-resources/databases/dynamo-db/tables/event-store-table.table';
+import { UserInfraestructureLambda } from './src/infraestructure/user-infraestructure.lambda';
+import { UserInfraestructureController } from './src/infraestructure/code/controllers/user-infraestructure.controller';
+import { ApiAuthorizersInfraestructureLambda } from '@packages/support/app/external-requests/src/infraestructure/api-authorizers-infraestructure.lambda';
 
 export const routes: RestApiAppRoutesType<AppRequestType> = {
   [UserCommands.CREATE_USER]: {
@@ -36,18 +40,20 @@ export const routes: RestApiAppRoutesType<AppRequestType> = {
           ':pk': { S: "DOMAIN_EVENT#EVENT_TYPE#$input.params('eventType')" },
         },
       },
-      responseDefinition: `
-        #set($inputRoot = $input.path('$'))
-        {
-        "response": [
-            #foreach($field in $inputRoot.Items) {
-              "payload": "$field.payload.S",
-              "ttl": "$field.ttl.S"
-            }#if($foreach.hasNext),#end
-            #end
-          ]
-        }
-      `,
+      selectedFields: {
+        payload: '$fields.payload.S',
+        ttl: '$fields.ttl.N',
+      },
+    }),
+  },
+  [UserQueries.GET_UUID]: {
+    [HttpMethod.POST]: RestApiLambdaIntegration.build({
+      target: UserInfraestructureLambda,
+      authorizerFunction: ApiAuthorizersInfraestructureLambda,
+      handlerProps: {
+        controller: UserInfraestructureController,
+        methodName: UserInfraestructureController.generateUuid.name,
+      },
     }),
   },
 };

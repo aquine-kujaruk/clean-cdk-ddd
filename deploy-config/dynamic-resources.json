@@ -4,6 +4,6 @@
     "function": ["UserInfraestructureLambda", "UserDomainLambda"]
   },
   "@packages/support": {
-    "function": ["EventDispatcherInfraestructureLambda"]
+    "function": ["EventDispatcherInfraestructureLambda", "ApiAuthorizersInfraestructureLambda"]
   }
 }

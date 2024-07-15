@@ -8,6 +8,6 @@ export class UserSubscription extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'id', type: AttributeType.STRING },
     });
 
-    this.build();
+    super.build();
   }
 }

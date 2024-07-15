@@ -8,6 +8,6 @@ export class ShipmentAddress extends DynamoDbBuilderConstruct {
       partitionKey: { name: 'id', type: AttributeType.STRING },
     });
 
-    this.build();
+    super.build();
   }
 }

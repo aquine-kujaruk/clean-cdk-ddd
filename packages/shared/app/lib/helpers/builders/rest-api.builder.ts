@@ -3,6 +3,7 @@ import {
   ApiKey,
   ApiKeySourceType,
   Cors,
+  EndpointType,
   IResource,
   LogGroupLogDestination,
   RestApi,
@@ -29,7 +30,7 @@ type RestApiBuilderConstructProps<T extends string | number | symbol> = {
   apiKeyValue?: string;
 } & RestApiProps;
 
-export class RestApiBuilderConstruct<T extends string | number | symbol > extends BaseBuilder<
+export class RestApiBuilderConstruct<T extends string | number | symbol> extends BaseBuilder<
   RestApi,
   RestApiBuilderConstructProps<T>
 > {
@@ -38,7 +39,7 @@ export class RestApiBuilderConstruct<T extends string | number | symbol > extend
   }
 
   public static getResourceName(name: string): string {
-    return RestApiBuilderConstruct.getStatelessResourceName(name);
+    return BaseBuilder.getStatelessResourceName(name);
   }
 
   protected build(): RestApi {
@@ -55,6 +56,7 @@ export class RestApiBuilderConstruct<T extends string | number | symbol > extend
       _.merge(
         {
           restApiName,
+          endpointTypes: [EndpointType.REGIONAL],
           defaultCorsPreflightOptions: {
             allowOrigins: Cors.ALL_ORIGINS,
             allowMethods: Cors.ALL_METHODS,

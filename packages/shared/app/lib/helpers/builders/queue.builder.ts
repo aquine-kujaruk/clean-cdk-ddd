@@ -9,7 +9,7 @@ export class QueueBuilderConstruct extends BaseBuilder<Queue, QueueProps> {
   }
 
   public static getResourceName(name: string): string {
-    return this.getStatelessResourceName(name);
+    return BaseBuilder.getStatelessResourceName(name);
   }
 
   public static getArn(scope: Construct, name: string): string {
@@ -18,11 +18,11 @@ export class QueueBuilderConstruct extends BaseBuilder<Queue, QueueProps> {
   }
 
   public static getImportedResource(scope: Construct, name: string): IQueue {
-    const stack = this.getStack(scope);
+    const stack = BaseBuilder.getStack(scope);
     stack.getLogicalId;
     return Queue.fromQueueArn(
       scope,
-      QueueBuilderConstruct.getUniqueConstructName(name),
+      BaseBuilder.getUniqueConstructName(name),
       QueueBuilderConstruct.getArn(scope, name)
     );
   }
