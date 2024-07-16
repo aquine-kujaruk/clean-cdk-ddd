@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "modules/*"
   ],
   "scripts": {
     "build": "tsc",
@@ -11,16 +11,16 @@
     "test": "jest",
     "aws:config": "aws configure sso --profile cdk-prisa-dev",
     "aws:login": "aws sso login --profile cdk-prisa-dev",
-    "synth:shared": "cd packages/shared && npm run synth",
-    "synth:core": "cd packages/core && npm run synth",
-    "synth:support": "cd packages/support && npm run synth",
-    "deploy:shared": "cd packages/shared && npm run deploy",
-    "deploy:core": "cd packages/core && npm run deploy",
-    "deploy:support": "cd packages/support && npm run deploy",
-    "destroy:shared": "cd packages/shared && npm run destroy",
-    "destroy:core": "cd packages/core && npm run destroy",
-    "destroy:support": "cd packages/support && npm run destroy",
-    "hotswap": "cd packages/core && npm run hotswap",
+    "synth:shared": "cd modules/shared && npm run synth",
+    "synth:core": "cd modules/core && npm run synth",
+    "synth:support": "cd modules/support && npm run synth",
+    "deploy:shared": "cd modules/shared && npm run deploy",
+    "deploy:core": "cd modules/core && npm run deploy",
+    "deploy:support": "cd modules/support && npm run deploy",
+    "destroy:shared": "cd modules/shared && npm run destroy",
+    "destroy:core": "cd modules/core && npm run destroy",
+    "destroy:support": "cd modules/support && npm run destroy",
+    "hotswap": "cd modules/core && npm run hotswap",
     "generate:dist": "npm run synth:core && npm run synth:support"
   },
   "dependencies": {

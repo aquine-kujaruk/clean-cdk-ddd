@@ -1,9 +1,9 @@
 {
-  "@packages/core": {
+  "@modules/core": {
     "stateMachine": ["CreateUserStateMachine", "CreateUserStateMachineStandard"],
     "function": ["UserInfraestructureLambda", "UserDomainLambda"]
   },
-  "@packages/support": {
+  "@modules/support": {
     "function": ["EventDispatcherInfraestructureLambda", "ApiAuthorizersInfraestructureLambda"]
   }
 }

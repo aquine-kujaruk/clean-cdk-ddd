@@ -19,10 +19,10 @@
     "strictPropertyInitialization": false,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "baseUrl": "./packages",
+    "baseUrl": "./modules",
     "paths": {
-      "@packages/shared/*": ["packages/shared/*"],
-      "@packages/core/*": ["packages/core/*"]
+      "@modules/shared/*": ["modules/shared/*"],
+      "@modules/core/*": ["modules/core/*"]
     },
     "typeRoots": ["./node_modules/@types"]
   },

@@ -14,11 +14,11 @@ yarn-error.log
 
 lib/poc-examples
 
-!packages/backend/lib/lambda-functions/lambda-layers/code/libraries/nodejs/node_modules
+!modules/backend/lib/lambda-functions/lambda-layers/code/libraries/nodejs/node_modules
 
 .favorites.json
 
-packages/pocs
-packages/websocket
-packages/revers-proxy-pmin
+modules/pocs
+modules/websocket
+modules/revers-proxy-pmin
 

@@ -1,0 +1,14 @@
+{
+  "name": "@modules/support",
+  "version": "1.0.0",
+  "main": "bin/app.ts",
+  "scripts": {
+    "synth": "rm -rf cdk.out && npx cdk synth --all --quiet",
+    "deploy": "rm -rf cdk.out && npx cdk deploy --profile cdk-prisa-dev --all --require-approval never",
+    "destroy": "rm -rf cdk.out && npx cdk destroy --profile cdk-prisa-dev --all"
+  },
+  "dependencies": {
+    "@modules/shared": "1.0.0",
+    "@modules/core": "1.0.0"
+  }
+}
