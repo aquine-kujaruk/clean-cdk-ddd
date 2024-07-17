@@ -9,11 +9,12 @@ export type EnvVars = {
 
 export class Configurations {
   static getEnvs(): EnvVars {
-    const user = process.env.CDK_USER ||
-    process.env.USER ||
-    process.env.USERNAME ||
-    process.env.LOGNAME ||
-    'unknown'
+    const user =
+      process.env.CDK_USER ||
+      process.env.USER ||
+      process.env.USERNAME ||
+      process.env.LOGNAME ||
+      'unknown';
 
     return {
       ...process.env,
@@ -42,9 +43,7 @@ export class Configurations {
   }
 
   static getDynamicStackName(name: string) {
-    return `${Configurations.getEnvs()?.APP_NAME}-${Configurations.getEnvs()?.USER}-${name}-${
-      Configurations.getEnvs()?.STAGE
-    }`;
+    return `${Configurations.getEnvs()?.APP_NAME}-${name}-${Configurations.getEnvs()?.USER}`;
   }
 
   static getStaticStackName(name: string) {

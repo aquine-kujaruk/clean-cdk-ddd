@@ -57,7 +57,7 @@ export abstract class BaseBuilder<T, P> extends Construct {
     const splittedName = name.split('_');
     const identifier = splittedName.map((text) => camelCase(text)).join('_');
 
-    return `${APP_NAME}-${USER}-${identifier}-${STAGE}`;
+    return `${APP_NAME}-${identifier}-${USER}`;
   }
 
   protected static getStack(scope: Construct): Stack {
