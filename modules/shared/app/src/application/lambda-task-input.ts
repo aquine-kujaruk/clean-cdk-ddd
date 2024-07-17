@@ -1,8 +1,8 @@
 import { JsonPath, TaskInput } from 'aws-cdk-lib/aws-stepfunctions';
-import { ControllerClassType } from '../infraestructure/controllers/base.controller';
+import { ServiceClassType } from '../infraestructure/services/base.service';
 
 interface LambdaTaskInputProps {
-  controller: ControllerClassType;
+  service: ServiceClassType;
   methodName: string;
   input?: string | Record<string, any>;
   executionStack?: Record<never, never>;
@@ -11,15 +11,15 @@ interface LambdaTaskInputProps {
 
 export class LambdaTaskInput {
   static fromObject(props: LambdaTaskInputProps): TaskInput {
-    if (!props.methodName.length || (props.controller as any)[props.methodName] === undefined)
-      throw new Error(`Method [${props.methodName}] not found in controller [${props.controller.name}]`);
+    if (!props.methodName.length || (props.service as any)[props.methodName] === undefined)
+      throw new Error(`Method [${props.methodName}] not found in service [${props.service.name}]`);
 
     return TaskInput.fromObject({
       executionStack: JsonPath.objectAt('$.executionStack'),
       previousStep: JsonPath.objectAt('$.previousStep'),
       stateName: JsonPath.stateName,
       ...props,
-      controller: props.controller.name,
+      service: props.service.name,
     });
   }
 }

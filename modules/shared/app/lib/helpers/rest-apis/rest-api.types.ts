@@ -4,7 +4,7 @@ import { Construct } from 'constructs';
 import { LambdaConstructType, RestApiIntegrationTargetTypes } from '../construct.types';
 import { RestApiIntegration } from './integration';
 import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
-import { ControllerClassType } from '@modules/shared/app/src/infraestructure/controllers/base.controller';
+import { ServiceClassType } from '@modules/shared/app/src/infraestructure/services/base.service';
 
 // Integration types
 export interface RestApiRequestIntegrationsProps {
@@ -19,7 +19,7 @@ export interface RestApiRequestDynamoDbIntegrationsProps extends RestApiRequestI
 
 export interface RestApiRequestLambdaIntegrationsProps extends RestApiRequestIntegrationsProps {
   handlerProps: {
-    controller: ControllerClassType;
+    service: ServiceClassType;
     methodName: string;
   };
 }

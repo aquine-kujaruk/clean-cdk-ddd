@@ -1,5 +1,5 @@
 import { camelCase } from 'change-case-all';
-import { ControllerClassType } from './controllers/base.controller';
+import { ServiceClassType } from './services/base.service';
 
 export type HandlerRoutesType<Key extends string, Base> = {
   [key in Key]: new (...args: any[]) => Base;
@@ -16,7 +16,7 @@ interface StateMachineExecutionProps {
 }
 
 export interface LambdaHandlerProps extends StateMachineExecutionProps {
-  controller: string;
+  service: string;
   methodName: string;
   input: Record<string, any>;
 }
@@ -24,7 +24,7 @@ export interface LambdaHandlerProps extends StateMachineExecutionProps {
 export class LambdaHandlerRouter {
   constructor(
     private readonly props: LambdaHandlerProps,
-    private readonly controllers: ControllerClassType[]
+    private readonly services: ServiceClassType[]
   ) {}
 
   async route() {
@@ -44,21 +44,21 @@ export class LambdaHandlerRouter {
   }
 
   private async execute() {
-    const { controller, methodName: method, input } = this.props;
+    const { service, methodName: method, input } = this.props;
 
-    const controllerMap = this.createControllerMap();
+    const serviceMap = this.createServiceMap();
 
-    const targetController: any = controllerMap[controller];
-    if (!targetController) throw new Error('Controller not found');
+    const targetService: any = serviceMap[service];
+    if (!targetService) throw new Error('Service not found');
 
-    const targetMethod: any = targetController[method];
+    const targetMethod: any = targetService[method];
     if (!targetMethod) throw new Error('Method not found');
 
     return targetMethod(input);
   }
 
-  private createControllerMap() {
-    return this.controllers.reduce((acc: Record<string, ControllerClassType>, val) => {
+  private createServiceMap() {
+    return this.services.reduce((acc: Record<string, ServiceClassType>, val) => {
       acc[val.name] = val;
       return acc;
     }, {});

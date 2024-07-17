@@ -9,7 +9,7 @@ export type EnvVars = {
 
 export class Configurations {
   static getEnvs(): EnvVars {
-    const user =
+    const book =
       process.env.CDK_USER ||
       process.env.USER ||
       process.env.USERNAME ||
@@ -18,7 +18,7 @@ export class Configurations {
 
     return {
       ...process.env,
-      USER: camelCase(user),
+      USER: camelCase(book),
     };
   }
 
@@ -26,7 +26,7 @@ export class Configurations {
     const tags = [
       { key: 'appName', value: Configurations.getEnvs()?.APP_NAME as string },
       { key: 'environment', value: Configurations.getEnvs()?.STAGE as string },
-      { key: 'user', value: Configurations.getEnvs()?.USER as string },
+      { key: 'book', value: Configurations.getEnvs()?.USER as string },
       { key: 'Medio', value: 'El País' },
       { key: 'Pais', value: 'ES' },
       { key: 'Owner', value: 'aabalo@prisanoticias.com' },

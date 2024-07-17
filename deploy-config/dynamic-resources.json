@@ -1,7 +1,7 @@
 {
   "@modules/core": {
-    "stateMachine": ["CreateUserStateMachine", "CreateUserStateMachineStandard"],
-    "function": ["UserInfraestructureLambda", "UserDomainLambda"]
+    "stateMachine": ["CreateBookStateMachine", "CreateBookStateMachineStandard"],
+    "function": ["BookInfraestructureLambda", "BookDomainLambda"]
   },
   "@modules/support": {
     "function": ["EventDispatcherInfraestructureLambda", "ApiAuthorizersInfraestructureLambda"]

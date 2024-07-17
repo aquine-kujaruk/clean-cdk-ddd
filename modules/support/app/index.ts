@@ -1,7 +1,7 @@
 import { Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { EventDispatcher } from './event-dispatcher';
-import { ExternalRequests } from './external-requests';
+import { EventDispatcher } from './event-dispatcher/infraestructure/lib/event-dispatcher.stack';
+import { ExternalRequests } from './external-requests/infraestructure/lib/external-requests.stack';
 
 export class SupportStack extends Stack {
   constructor(scope: Construct, id: string) {

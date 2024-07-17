@@ -15,8 +15,8 @@ export class BillingType extends DynamoDbBuilderConstruct {
 
   private createIndexes(table: Table) {
     table.addGlobalSecondaryIndex({
-      indexName: 'userID-index',
-      partitionKey: { name: 'userID', type: AttributeType.STRING },
+      indexName: 'bookID-index',
+      partitionKey: { name: 'bookID', type: AttributeType.STRING },
       projectionType: ProjectionType.ALL,
     });
 

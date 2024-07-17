@@ -21,8 +21,8 @@ export class SwgSubscriptions extends DynamoDbBuilderConstruct {
     });
 
     table.addGlobalSecondaryIndex({
-      indexName: 'user_uuid-index',
-      partitionKey: { name: 'user_uuid', type: AttributeType.STRING },
+      indexName: 'book_uuid-index',
+      partitionKey: { name: 'book_uuid', type: AttributeType.STRING },
       projectionType: ProjectionType.ALL,
     });
   }

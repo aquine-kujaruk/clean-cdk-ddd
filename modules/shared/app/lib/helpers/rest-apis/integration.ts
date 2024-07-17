@@ -163,7 +163,7 @@ export class RestApiLambdaIntegration extends RestApiIntegration {
               #end
             }
           },
-          "controller": "${props.handlerProps.controller.name}",
+          "service": "${props.handlerProps.service.name}",
           "methodName": "${props.handlerProps.methodName}"
         }
       `,
