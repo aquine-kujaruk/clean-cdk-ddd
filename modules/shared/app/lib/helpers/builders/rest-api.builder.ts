@@ -10,23 +10,23 @@ import {
   RestApiProps,
   UsagePlan,
 } from 'aws-cdk-lib/aws-apigateway';
+import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { Construct } from 'constructs';
 import _ from 'lodash';
 import { Configurations } from '../../../../configurations';
 import {
-  RestApiAppRoutesType,
+  RestApiAppControllersType,
   RestApiIntegrationProps,
   RestApiRouteType,
 } from '../rest-apis/rest-api.types';
 import { BaseBuilder } from './base.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
-import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 
 const { STAGE } = Configurations.getEnvs();
 
 type RestApiBuilderConstructProps<T extends string | number | symbol> = {
   apiRoutes: RestApiRouteType<T>;
-  appRoutes: RestApiAppRoutesType<T>;
+  appRoutes: RestApiAppControllersType<T>;
   apiEventSource: string;
   apiKeyValue?: string;
 } & RestApiProps;
@@ -118,7 +118,6 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
   }
 
   private createApiRoutesMethods(api: RestApi, routes: RestApiRouteType<T>) {
-
     for (const path in routes) {
       for (const method in routes[path]) {
         const restApiIntegrationProps: RestApiIntegrationProps = {
@@ -128,7 +127,11 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
           apiEventSource: this.props.apiEventSource,
         };
 
-        (this.props.appRoutes as any)[path]?.[method]?.(this, restApiIntegrationProps);
+        const request = (routes as any)[path]?.[method];
+
+        if (!request) continue;
+
+        (this.props.appRoutes as any)[request]?.(this, restApiIntegrationProps);
       }
     }
   }

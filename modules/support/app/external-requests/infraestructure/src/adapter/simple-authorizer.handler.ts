@@ -3,7 +3,7 @@ import { APIGatewayAuthorizerResult } from 'aws-lambda/trigger/api-gateway-autho
 import { ulid } from 'ulidx';
 
 export const handler = async function (event: any): Promise<APIGatewayAuthorizerResult> {
-  console.log(`event => ${JSON.stringify(event)}`);
+  console.log('Functions params: ', JSON.stringify(event, null, 2));
 
   const authToken = event.headers['authorization'] || '';
   try {
@@ -14,7 +14,7 @@ export const handler = async function (event: any): Promise<APIGatewayAuthorizer
       Statement: [
         {
           Action: 'execute-api:Invoke',
-          Effect: 'Deny', // return Deny if you want to reject the request
+          Effect: 'Allow', // return Deny if you want to reject the request
           Resource: event['methodArn'],
         },
       ],
@@ -33,11 +33,11 @@ export const handler = async function (event: any): Promise<APIGatewayAuthorizer
       policyDocument,
       context,
     };
-    console.log(`response => ${JSON.stringify(response)}`);
+    console.log('Request authorized', JSON.stringify(response, null, 2));
 
     return response;
   } catch (err) {
-    console.error('Invalid auth token. err => ', err);
+    console.error('Unauthorized Request', err);
     throw new Error('Unauthorized');
   }
 };

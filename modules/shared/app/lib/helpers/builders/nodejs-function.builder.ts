@@ -17,7 +17,7 @@ export class NodejsFunctionBuilderConstruct extends BaseBuilder<
   }
 
   public build(): NodejsFunction | undefined {
-    if (!super.isActive('function')) return;
+    // if (!super.isActive('function')) return;
 
     const functionName = LambdaBuilderConstruct.getResourceName(this.id);
 

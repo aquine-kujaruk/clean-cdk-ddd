@@ -35,7 +35,7 @@ import {
 import { Duration } from 'aws-cdk-lib';
 import { BaseBuilder } from '../builders/base.builder';
 
-export abstract class RestApiIntegration {
+export abstract class RestApiBaseIntegration {
   protected handler: IStateMachine | IFunction;
 
   constructor(
@@ -75,7 +75,6 @@ export abstract class RestApiIntegration {
         ...options,
         authorizer,
         authorizationType: AuthorizationType.CUSTOM,
-        
       };
     }
 
@@ -106,17 +105,29 @@ export abstract class RestApiIntegration {
   }
 }
 
-export class RestApiSfnIntegration extends RestApiIntegration {
+class RestApiSfnIntegration extends RestApiBaseIntegration {
   constructor(scope: Construct, props: RestApiIntegrationProps & RestApiRequestIntegrationsProps) {
     super(scope, props);
 
     const handler = StateMachineBuilderConstruct.getImportedResource(this.scope, props.target.name);
 
-    const integration = StepFunctionsIntegration.startExecution(handler);
+    const integration = StepFunctionsIntegration.startExecution(handler, {
+      // integrationResponses: [
+      //   ...super.awsDefaultIntegrationResponses,
+      //   {
+      //     statusCode: '200',
+      //     responseTemplates: {
+      //       'application/json': "$input.path('$')",
+      //     },
+      //   },
+      // ]
+      useDefaultMethodResponses: true,
+    });
+
     super.addMethod(integration);
   }
 
-  static build(
+  static setup(
     requestProps: RestApiRequestIntegrationsProps & { target: StateMachineConstructType }
   ) {
     return (scope: Construct, props: RestApiIntegrationProps) =>
@@ -124,7 +135,7 @@ export class RestApiSfnIntegration extends RestApiIntegration {
   }
 }
 
-export class RestApiLambdaIntegration extends RestApiIntegration {
+class RestApiLambdaIntegration extends RestApiBaseIntegration {
   constructor(
     scope: Construct,
     props: RestApiIntegrationProps & RestApiRequestLambdaIntegrationsProps
@@ -191,7 +202,7 @@ export class RestApiLambdaIntegration extends RestApiIntegration {
     });
   }
 
-  static build(
+  static setup(
     requestProps: RestApiRequestLambdaIntegrationsProps & { target: LambdaConstructType }
   ) {
     return (scope: Construct, props: RestApiIntegrationProps) =>
@@ -199,7 +210,7 @@ export class RestApiLambdaIntegration extends RestApiIntegration {
   }
 }
 
-export class RestApiDaynamoDbIntegration extends RestApiIntegration {
+class RestApiDaynamoDbIntegration extends RestApiBaseIntegration {
   constructor(
     scope: Construct,
     props: RestApiIntegrationProps & RestApiRequestDynamoDbIntegrationsProps
@@ -265,7 +276,7 @@ export class RestApiDaynamoDbIntegration extends RestApiIntegration {
     });
   }
 
-  static build(
+  static setup(
     requestProps: RestApiRequestDynamoDbIntegrationsProps & {
       target: DynamoDbConstructType;
       query: Omit<QueryCommandInput, 'TableName'>;
@@ -277,7 +288,7 @@ export class RestApiDaynamoDbIntegration extends RestApiIntegration {
   }
 }
 
-export class RestApiEventBusIntegration extends RestApiIntegration {
+class RestApiEventBusIntegration extends RestApiBaseIntegration {
   constructor(scope: Construct, props: RestApiIntegrationProps & RestApiRequestIntegrationsProps) {
     super(scope, props);
 
@@ -336,8 +347,15 @@ export class RestApiEventBusIntegration extends RestApiIntegration {
     });
   }
 
-  static build(requestProps: RestApiRequestIntegrationsProps & { target: EventBusConstructType }) {
+  static setup(requestProps: RestApiRequestIntegrationsProps & { target: EventBusConstructType }) {
     return (scope: Construct, props: RestApiIntegrationProps) =>
       new RestApiEventBusIntegration(scope, { ...props, ...requestProps });
   }
 }
+
+export const RestApiIntegration = {
+  StateMachine: RestApiSfnIntegration.setup,
+  EventBridge: RestApiEventBusIntegration.setup,
+  DynamoDb: RestApiDaynamoDbIntegration.setup,
+  Lambda: RestApiLambdaIntegration.setup,
+};

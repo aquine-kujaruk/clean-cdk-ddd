@@ -4,7 +4,7 @@ import { CloudWatchLogGroup, SqsQueue } from 'aws-cdk-lib/aws-events-targets';
 import { Construct } from 'constructs';
 import { RulesProps } from '.';
 import { AppEvents } from '../../app.events';
-import { AppEventSources } from '../../appevent.event-sources';
+import { AppEventSources } from '../../app.event-sources';
 
 export class AppEventsRule extends RuleBuilderConstruct {
   constructor(scope: Construct, props: RulesProps) {

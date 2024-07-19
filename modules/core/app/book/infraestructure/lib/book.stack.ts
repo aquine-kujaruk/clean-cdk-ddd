@@ -1,8 +1,8 @@
 import { Configurations } from '@modules/shared/configurations';
 import { NestedStack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { BookDomainLambda } from './book-domain.lambda';
-import { BookInfraestructureLambda } from './book-infraestructure.lambda';
+import { BookLambda } from './book.lambda';
+import { AddCommentStateMachine } from './state-machines/add-comment.state-machine';
 import { CreateBookStateMachine } from './state-machines/create-book.state-machine';
 
 const { STAGE } = Configurations.getEnvs();
@@ -13,8 +13,9 @@ export class BookStack extends NestedStack {
 
     const commonEnvironment = { ENV: STAGE };
 
-    new BookDomainLambda(this, { environment: commonEnvironment });
-    new BookInfraestructureLambda(this, { environment: commonEnvironment });
+    new BookLambda(this, { environment: commonEnvironment });
+
     new CreateBookStateMachine(scope);
+    new AddCommentStateMachine(scope);
   }
 }

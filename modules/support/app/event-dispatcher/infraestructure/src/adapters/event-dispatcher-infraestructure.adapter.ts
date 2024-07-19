@@ -2,7 +2,7 @@ import { BatchProcessor, EventType } from '@aws-lambda-powertools/batch';
 import { ServiceClassType } from '@modules/shared/app/src/infraestructure/services/base.service';
 import { LambdaHandlerRouter } from '@modules/shared/app/src/infraestructure/lambda-handler.router';
 import type { Context, SQSBatchResponse, SQSEvent } from 'aws-lambda';
-import { AppEventSources } from '../../../infraestructure/appevent.event-sources';
+import { AppEventSources } from '../../app.event-sources';
 import { ArcRetailWebsocketEventService } from '../services/arc-retail-websocket-events.service';
 
 const processor = new BatchProcessor(EventType.SQS);

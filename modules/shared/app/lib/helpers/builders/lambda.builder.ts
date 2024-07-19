@@ -33,7 +33,7 @@ export class LambdaBuilderConstruct extends BaseBuilder<Function, FunctionProps>
   }
 
   public build(): Function | undefined {
-    if (!super.isActive('function')) return;
+    // if (!super.isActive('function')) return;
 
     const functionName = LambdaBuilderConstruct.getResourceName(this.id);
 

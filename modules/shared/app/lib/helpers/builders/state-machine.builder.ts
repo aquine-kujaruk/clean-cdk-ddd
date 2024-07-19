@@ -1,4 +1,3 @@
-import { StateMachineRole } from '../../stateful-resources/iam/roles/state-machine.role';
 import { RemovalPolicy } from 'aws-cdk-lib';
 import {
   Chain,
@@ -11,9 +10,12 @@ import {
 } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 import _ from 'lodash';
+import { LambdaInvokeTask } from '../../../application/lib/custom-tasks/lambda-invoke.task';
+import { StateMachineRole } from '../../stateful-resources/iam/roles/state-machine.role';
 import { BaseBuilder } from './base.builder';
-import { RoleBuilderConstruct } from './role.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
+import { RoleBuilderConstruct } from './role.builder';
+import { inspect } from 'util';
 
 export abstract class ChainableSfnDefinition {
   constructor(protected readonly scope: Construct) {}
@@ -39,7 +41,9 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
 
   public static getArn(scope: Construct, name: string): string {
     const { region, account } = BaseBuilder.getStack(scope);
-    return `arn:aws:states:${region}:${account}:stateMachine:${StateMachineBuilderConstruct.getResourceName(name)}`;
+    return `arn:aws:states:${region}:${account}:stateMachine:${StateMachineBuilderConstruct.getResourceName(
+      name
+    )}`;
   }
 
   public static getImportedResource(scope: Construct, name: string): IStateMachine {
@@ -63,8 +67,20 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
     }
   }
 
+  private validateStartState(startState: any) {
+    const { initializeContext } = startState?.props?.payload?.value || {};
+
+    if (!(startState instanceof LambdaInvokeTask && initializeContext))
+      throw {
+        stateMachine: this.id,
+        error: new Error(
+          `Start state must be an instance of "LambdaInvokeTask" with "initializeContext" payload attribute set to true`
+        ),
+      };
+  }
+
   public build(): StateMachine | undefined {
-    if (!super.isActive('stateMachine')) return;
+    // if (!super.isActive('stateMachine')) return;
 
     const stateMachineProps = this.props;
 
@@ -74,6 +90,8 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
 
     // Tiene que ser así para que tenga el scope correcto
     const { definitionChain } = new this.props.definitionJob(this);
+
+    this.validateStartState(definitionChain.startState);
 
     const handler = new StateMachine(
       this,

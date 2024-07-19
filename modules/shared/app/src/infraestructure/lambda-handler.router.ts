@@ -6,10 +6,12 @@ export type HandlerRoutesType<Key extends string, Base> = {
 };
 
 interface StateMachineExecutionProps {
-  executionStack?: {
-    [key in string]: {
-      input: Record<string, any>;
-      output: Record<string, any>;
+  context?: {
+    execution: {
+      [key in string]: {
+        input: Record<string, any>;
+        output: Record<string, any>;
+      };
     };
   };
   stateName?: string;
@@ -28,18 +30,22 @@ export class LambdaHandlerRouter {
   ) {}
 
   async route() {
-    const { input, executionStack = {}, stateName } = this.props;
-    console.log('this.props: ', this.props);
-
+    
     const output = await this.execute();
+    
+    if (!this.props.stateName) return output;
+
+    // StateMachine execution
+    const { input, context, stateName } = this.props;
 
     const previousStep = { input, output };
 
-    if (!stateName) return output;
 
     return {
-      previousStep,
-      executionStack: { ...executionStack, [camelCase(stateName)]: previousStep },
+      context: {
+        previousStep,
+        execution: { ...context.execution, [camelCase(stateName)]: previousStep },
+      },
     };
   }
 

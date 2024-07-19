@@ -10,15 +10,19 @@ export const PublicApiRoutes: RestApiRouteType<AppRequestType> = {
     [HttpMethod.POST]: BookCommands.CREATE_BOOK,
   },
 
-  'book/event/create-book': {
-    [HttpMethod.POST]: BookEvents.GIFT_REDEEMED,
+  'book/command/add-comment/{bookId}': {
+    [HttpMethod.POST]: BookCommands.ADD_COMMENT,
   },
 
-  'book/query/get-book/{eventType}': {
+  'book/event/verified-book': {
+    [HttpMethod.POST]: BookEvents.VERIFIED_BOOK,
+  },
+
+  'book/query/get-book/{bookId}': {
     [HttpMethod.GET]: BookQueries.GET_BOOK,
   },
 
-  'book/query/get-uuid/{param}': {
-    [HttpMethod.POST]: BookQueries.GET_UUID,
+  'book/query/get-books-and-comments/{bookId}': {
+    [HttpMethod.POST]: BookQueries.GET_BOOK_AND_COMMENTS,
   },
 };

@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "dist",
   },
-  "include": ["app/**/*", "bin/app.ts", "configurations/**/*"]
+  "include": ["app/**/*", "bin/app.ts", "configurations/**/*", "app/src/infraestructure/repositories/day-js.repository.ts", "app/src/infraestructure/repositories/uuid.repository.ts", "../support/app/event-dispatcher/domain/contracts/event-bus.repository.ts", "../support/app/event-dispatcher/infraestructure/src/repositories/aws-event-bridge.repository.ts", "../support/app/event-dispatcher/infraestructure/src/adapters/aws-event-bridge.adapter.ts"]
 }

@@ -4,5 +4,5 @@
     "outDir": "dist",
     "rootDir": "../.."
   },
-  "include": ["app/**/*", "bin/app.ts"]
+  "include": ["app/**/*", "bin/app.ts", "../shared/app/src/infraestructure/repositories/uuid.repository.ts", "../shared/app/src/infraestructure/repositories/day-js.repository.ts", "../shared/app/src/domain/contracts/date.repository.ts", "../shared/app/src/domain/contracts/identifier.repository.ts"]
 }
