@@ -1,4 +1,4 @@
-import { QueueBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/queue.builder';
+import { QueueBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/queue.builder';
 import { Duration } from 'aws-cdk-lib';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';

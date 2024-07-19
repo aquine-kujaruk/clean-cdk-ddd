@@ -1,4 +1,4 @@
-import { BucketBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/bucket.builder';
+import { BucketBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/bucket.builder';
 import { Construct } from 'constructs';
 
 export class Refund extends BucketBuilderConstruct {

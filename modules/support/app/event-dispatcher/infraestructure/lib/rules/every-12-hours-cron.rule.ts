@@ -1,4 +1,4 @@
-import { RuleBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/rule.builder';
+import { RuleBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/rule.builder';
 import { Duration } from 'aws-cdk-lib';
 import { Schedule } from 'aws-cdk-lib/aws-events';
 import { Construct } from 'constructs';

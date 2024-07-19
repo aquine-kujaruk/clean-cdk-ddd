@@ -1,4 +1,4 @@
-import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/nodejs-function.builder';
+import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/nodejs-function.builder';
 import { Function } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import path from 'path';

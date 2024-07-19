@@ -1,4 +1,4 @@
-import { RestApiBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/rest-api.builder';
+import { RestApiBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/rest-api.builder';
 import { Construct } from 'constructs';
 import { AppEventSources } from '../../../event-dispatcher/infraestructure/app.event-sources';
 import { AppRequestType } from '../app.requests';

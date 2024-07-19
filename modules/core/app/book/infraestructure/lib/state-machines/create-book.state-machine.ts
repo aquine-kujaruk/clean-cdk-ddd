@@ -1,4 +1,4 @@
-import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/state-machine.builder';
+import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/state-machine.builder';
 import { Construct } from 'constructs';
 import { CreateBookDefinition } from '../../../application/use-cases/create-book.definition';
 

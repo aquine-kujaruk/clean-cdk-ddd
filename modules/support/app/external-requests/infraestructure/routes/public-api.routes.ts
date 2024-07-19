@@ -1,7 +1,7 @@
 import { BookCommands } from '@modules/core/app/book/infraestructure/book.commands';
 import { BookEvents } from '@modules/core/app/book/infraestructure/book.events';
 import { BookQueries } from '@modules/core/app/book/infraestructure/book.queries';
-import { RestApiRouteType } from '@modules/shared/app/lib/helpers/rest-apis/rest-api.types';
+import { RestApiRouteType } from '@modules/shared/app/lib/construct-utils/rest-apis/rest-api.types';
 import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { AppRequestType } from '../app.requests';
 

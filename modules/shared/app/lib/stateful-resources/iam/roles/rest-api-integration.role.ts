@@ -1,4 +1,4 @@
-import { RoleBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/role.builder';
+import { RoleBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/role.builder';
 import { Effect, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 

@@ -10,7 +10,7 @@ import {
 } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { LambdaInvokeTask } from '../../../application/lib/custom-tasks/lambda-invoke.task';
+import { LambdaInvokeTask } from '../sfn-custom-tasks/lambda-invoke.task';
 import { StateMachineRole } from '../../stateful-resources/iam/roles/state-machine.role';
 import { BaseBuilder } from './base.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';

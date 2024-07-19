@@ -1,4 +1,4 @@
-import { SecretBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/secrets.builder';
+import { SecretBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/secrets.builder';
 import { Construct } from 'constructs';
 
 export class AppSecrets extends SecretBuilderConstruct {

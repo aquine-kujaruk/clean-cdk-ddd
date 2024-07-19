@@ -1,4 +1,4 @@
-import { DynamoDbBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/dynamo-db.builder';
+import { DynamoDbBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/dynamo-db.builder';
 import { AttributeType, ProjectionType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
 

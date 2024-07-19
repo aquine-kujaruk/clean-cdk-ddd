@@ -1,5 +1,5 @@
-import { LogGroupBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/log-group.builder';
-import { RuleBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/rule.builder';
+import { LogGroupBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/log-group.builder';
+import { RuleBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/rule.builder';
 import { CloudWatchLogGroup, SqsQueue } from 'aws-cdk-lib/aws-events-targets';
 import { Construct } from 'constructs';
 import { RulesProps } from '.';

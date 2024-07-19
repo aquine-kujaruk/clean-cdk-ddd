@@ -1,6 +1,6 @@
 import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
-import { LambdaBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/lambda.builder';
-import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/state-machine.builder';
+import { LambdaBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/lambda.builder';
+import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/state-machine.builder';
 import {
   AuthorizationType,
   AwsIntegration,

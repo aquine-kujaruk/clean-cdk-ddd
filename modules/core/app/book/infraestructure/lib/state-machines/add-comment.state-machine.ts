@@ -1,4 +1,4 @@
-import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/state-machine.builder';
+import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/state-machine.builder';
 import { Construct } from 'constructs';
 import { AddCommentDefinition } from '../../../application/use-cases/add-comment.definition';
 

@@ -1,9 +1,9 @@
 import { CreateBookStateMachine } from '@modules/core/app/book/infraestructure/lib/state-machines/create-book.state-machine';
-import { BaseBuilder } from '@modules/shared/app/lib/helpers/builders/base.builder';
-import { DynamoDbBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/dynamo-db.builder';
-import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/nodejs-function.builder';
-import { QueueBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/queue.builder';
-import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/state-machine.builder';
+import { BaseBuilder } from '@modules/shared/app/lib/construct-utils/builders/base.builder';
+import { DynamoDbBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/dynamo-db.builder';
+import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/nodejs-function.builder';
+import { QueueBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/queue.builder';
+import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/state-machine.builder';
 import { EventStoreTable } from '@modules/shared/app/lib/stateful-resources/databases/dynamo-db/tables/event-store-table.table';
 import { Duration } from 'aws-cdk-lib';
 import { EventSourceMapping, Function, IFunction } from 'aws-cdk-lib/aws-lambda';

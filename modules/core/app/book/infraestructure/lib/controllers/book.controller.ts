@@ -1,5 +1,5 @@
-import { RestApiIntegration } from '@modules/shared/app/lib/helpers/rest-apis/integration';
-import { RestApiAppControllersType } from '@modules/shared/app/lib/helpers/rest-apis/rest-api.types';
+import { RestApiIntegration } from '@modules/shared/app/lib/construct-utils/rest-apis/integration';
+import { RestApiAppControllersType } from '@modules/shared/app/lib/construct-utils/rest-apis/rest-api.types';
 import { EventStoreTable } from '@modules/shared/app/lib/stateful-resources/databases/dynamo-db/tables/event-store-table.table';
 import { AppEventsBus } from '@modules/support/app/event-dispatcher/infraestructure/lib/app-events.bus';
 import { AppRequestType } from '@modules/support/app/external-requests/infraestructure/app.requests';

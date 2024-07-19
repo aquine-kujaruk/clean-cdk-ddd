@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { BucketBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/bucket.builder';
+import { BucketBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/bucket.builder';
 
 export class Backups extends BucketBuilderConstruct {
   constructor(scope: Construct) {

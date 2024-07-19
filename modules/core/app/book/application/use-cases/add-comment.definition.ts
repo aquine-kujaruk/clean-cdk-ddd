@@ -1,6 +1,6 @@
-import { LambdaInvokeTask } from '@modules/shared/app/application/lib/custom-tasks/lambda-invoke.task';
-import { LambdaBuilderConstruct } from '@modules/shared/app/lib/helpers/builders/lambda.builder';
-import { ChainableSfnDefinition } from '@modules/shared/app/lib/helpers/builders/state-machine.builder';
+import { LambdaInvokeTask } from '@modules/shared/app/lib/construct-utils/sfn-custom-tasks/lambda-invoke.task';
+import { LambdaBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/lambda.builder';
+import { ChainableSfnDefinition } from '@modules/shared/app/lib/construct-utils/builders/state-machine.builder';
 import { IFunction } from 'aws-cdk-lib/aws-lambda';
 import { Fail, JsonPath } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
