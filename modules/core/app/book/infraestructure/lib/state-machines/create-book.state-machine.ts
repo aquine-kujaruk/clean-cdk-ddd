@@ -1,6 +1,6 @@
-import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/state-machine.builder';
+import { StateMachineBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/state-machine.builder';
 import { Construct } from 'constructs';
-import { CreateBookDefinition } from '../../../application/use-cases/create-book.definition';
+import { CreateBookDefinition } from '../../../application/lib/use-cases/create-book.definition';
 
 export class CreateBookStateMachine extends StateMachineBuilderConstruct {
   constructor(scope: Construct) {

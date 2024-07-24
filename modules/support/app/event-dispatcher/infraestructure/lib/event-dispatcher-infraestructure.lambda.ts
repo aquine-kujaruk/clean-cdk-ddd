@@ -1,10 +1,12 @@
+import { BookLambda } from '@modules/core/app/book/infraestructure/lib/book.lambda';
 import { CreateBookStateMachine } from '@modules/core/app/book/infraestructure/lib/state-machines/create-book.state-machine';
-import { BaseBuilder } from '@modules/shared/app/lib/construct-utils/builders/base.builder';
-import { DynamoDbBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/dynamo-db.builder';
-import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/nodejs-function.builder';
-import { QueueBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/queue.builder';
-import { StateMachineBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/state-machine.builder';
-import { EventStoreTable } from '@modules/shared/app/lib/stateful-resources/databases/dynamo-db/tables/event-store-table.table';
+import { BaseBuilder } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/base.builder';
+import { DynamoDbBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/dynamo-db.builder';
+import { LambdaBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/lambda.builder';
+import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/nodejs-function.builder';
+import { QueueBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/queue.builder';
+import { StateMachineBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/state-machine.builder';
+import { EventStoreTable } from '@modules/shared/app/infraestructure/lib/stateful-resources/databases/dynamo-db/tables/event-store-table.table';
 import { Duration } from 'aws-cdk-lib';
 import { EventSourceMapping, Function, IFunction } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
@@ -24,6 +26,7 @@ export class EventDispatcherInfraestructureLambda extends NodejsFunctionBuilderC
           scope,
           CreateBookStateMachine.name
         ),
+        BOOK_LAMBDA_NAME: LambdaBuilderConstruct.getResourceName(BookLambda.name),
       },
       timeout: Duration.seconds(30),
       bundling: {

@@ -1,27 +1,26 @@
 import { BatchProcessor, EventType } from '@aws-lambda-powertools/batch';
-import { ServiceClassType } from '@modules/shared/app/src/infraestructure/services/base.service';
-import { LambdaHandlerRouter } from '@modules/shared/app/src/infraestructure/lambda-handler.router';
+import { ControllerClassType } from '@modules/shared/app//infraestructure/src/controllers/base.controller';
+import { LambdaHandlerRouter } from '@modules/shared/app/infraestructure/src/lambda-handler.router';
 import type { Context, SQSBatchResponse, SQSEvent } from 'aws-lambda';
 import { AppEventSources } from '../../app.event-sources';
-import { ArcRetailWebsocketEventService } from '../services/arc-retail-websocket-events.service';
+import { BookEventsController } from '../controllers/book-events.controller';
 
 const processor = new BatchProcessor(EventType.SQS);
 
-type ServiceRoutesType = Partial<Record<AppEventSources, ServiceClassType>>
+type ControllerRoutesType = Partial<Record<AppEventSources, ControllerClassType>>;
 
-const serviceRoutes: ServiceRoutesType = {
-  [AppEventSources.ARC_RETAIL_WEBSOCKET]: ArcRetailWebsocketEventService,
-  [AppEventSources.PUBLIC_API]: ArcRetailWebsocketEventService,
+const controllerRoutes: ControllerRoutesType = {
+  [AppEventSources.BOOK_CONTEXT]: BookEventsController,
 };
 
 const triggerUseCase = async ({ body }: { body: string }) => {
   const input = JSON.parse(body);
   const methodName = input['detail-type'];
-  const service = serviceRoutes[input.source as AppEventSources]?.name as string;
+  const controller = controllerRoutes[input.source as AppEventSources]?.name as string;
 
   const router = new LambdaHandlerRouter(
-    { service, methodName, input },
-    Object.values(serviceRoutes)
+    { controller, methodName, input },
+    Object.values(controllerRoutes)
   );
 
   await router.route();

@@ -1,16 +1,16 @@
 import {
-  LambdaHandlerProps,
+  HandlerProps,
   LambdaHandlerRouter,
-} from '@modules/shared/app/src/infraestructure/lambda-handler.router';
-import { BookService } from '../../../application/src/services/book.service';
-import { CommentService } from '../../../application/src/services/comment.service';
+} from '@modules/shared/app/infraestructure/src/lambda-handler.router';
+import { BookController } from '../controllers/book.controller';
+import { CommentController } from '../controllers/comment.controller';
 
-const services = [BookService, CommentService];
+const controllers = [BookController, CommentController];
 
-export const handler = async (event: LambdaHandlerProps) => {
+export const handler = async (event: HandlerProps) => {
   console.log('Functions params: ', JSON.stringify(event, null, 2));
 
-  const router = new LambdaHandlerRouter(event, services);
+  const router = new LambdaHandlerRouter(event, controllers);
 
   return router.route();
 };

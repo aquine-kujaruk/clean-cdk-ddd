@@ -1,7 +1,7 @@
-import { DynamoDbBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/dynamo-db.builder';
-import { EventBusBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/event-bus.builder';
-import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/lib/construct-utils/builders/nodejs-function.builder';
-import { MultiPurpose } from '@modules/shared/app/lib/stateful-resources/databases/dynamo-db/tables/multi-purpose.table';
+import { DynamoDbBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/dynamo-db.builder';
+import { EventBusBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/event-bus.builder';
+import { NodejsFunctionBuilderConstruct } from '@modules/shared/app/infraestructure/lib/construct-utils/builders/nodejs-function.builder';
+import { MultiPurpose } from '@modules/shared/app/infraestructure/lib/stateful-resources/databases/dynamo-db/tables/multi-purpose.table';
 import { AppEventsBus } from '@modules/support/app/event-dispatcher/infraestructure/lib/app-events.bus';
 import { Duration } from 'aws-cdk-lib';
 import { Function } from 'aws-cdk-lib/aws-lambda';

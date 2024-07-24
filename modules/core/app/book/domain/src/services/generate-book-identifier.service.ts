@@ -1,1 +1,0 @@
-export const generateBookIdentifierWithEntityPrefix = (id: string): string => `book_${id}`;

@@ -1,21 +1,35 @@
-import { UuidRepository } from '@modules/shared/app/src/infraestructure/repositories/uuid.repository';
-import { BaseService } from '@modules/shared/app/src/infraestructure/services/base.service';
-import { Book, CreateBookParams } from '../../../domain/src/entities/book.entity';
-import { BookDbRepository } from '../../../infraestructure/src/repositories/book-db.repository';
+import { IIdentifierRepository } from '@modules/shared/app/application/src/acl/identifier.contract';
+import { BookEntity } from '../../../domain/src/entities/book.entity';
+import { BookEntitySchema } from '../../../domain/src/schemas/book.schema';
+import { GenerateEntityIdService } from '../../../domain/src/services/generate-entity-id.service';
+import { IBookRepository } from '../acl/book.contract';
 
-export class BookService extends BaseService {
-  static async createBook({ name }: CreateBookParams) {
-    const uuidRepository = new UuidRepository();
+export class BookService {
+  constructor(
+    private readonly identifierRepository: IIdentifierRepository,
+    private readonly bookRepository: IBookRepository
+  ) {}
 
-    const id = uuidRepository.generate();
+  async createBook(name: string) {
+    const identifier = this.identifierRepository.generate();
 
-    const book = new Book(id, name);
+    const id = GenerateEntityIdService.getBookId(identifier);
+    const book = new BookEntity({ id, name });
 
     return book;
   }
 
-  static async saveBook(book: Book) {
-    const bookDbRepository = new BookDbRepository();
-    await bookDbRepository.save(book);
+  async saveBook(book: BookEntity) {
+    BookEntitySchema.parse(book);
+
+    await this.bookRepository.save(book);
+  }
+
+  async getBookWithComments(bookId: string) {
+    return this.bookRepository.getBookWithComments(bookId);
+  }
+
+  async incrementCommentsCounter(bookId: string) {
+    return this.bookRepository.incrementCommentsCounter(bookId);
   }
 }

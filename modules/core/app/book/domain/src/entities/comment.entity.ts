@@ -1,17 +1,22 @@
-import { generateCommentIdentifierWithEntityPrefix } from '../services/generate-comment-identifier.service';
+import { z } from 'zod';
+import { CommentEntitySchema } from '../schemas/comment.schema';
 
-export type CreateCommentParams = Pick<Comment, 'text' | 'bookId'>;
+export type CommentEntityType = z.infer<typeof CommentEntitySchema>;
 
-export class Comment {
-  constructor(
-    public readonly id: string,
-    public readonly text: string,
-    public readonly bookId: string
-  ) {
-    this.id = generateCommentIdentifierWithEntityPrefix(id);
+export class CommentEntity {
+  public readonly id: string;
+  public readonly text: string;
+  public readonly bookId: string;
+
+  constructor(props: CommentEntityType) {
+    CommentEntitySchema.parse(props);
+
+    this.id = props.id;
+    this.text = props.text;
+    this.bookId = props.bookId;
   }
 
-  static createCommentCreatedEventMessage(comment: Comment) {
-    return { commentId: comment.id };
+  static getCommentCreatedEventMessage(commentId: string, bookId: string) {
+    return { commentId, bookId };
   }
 }
