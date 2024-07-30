@@ -1,12 +1,12 @@
-import { IIdentifierRepository } from '@modules/shared/app/application/src/acl/identifier.contract';
-import { IEventDispatcherRepository } from '@modules/support/app/event-dispatcher/application/src/acl/event-dispatcher.contract';
+import { IIdentifierRepository } from '@modules/shared/app/application/src/contracts/identifier.contract';
+import { IEventDispatcherRepository } from '@modules/support/app/event-dispatcher/application/src/contracts/event-dispatcher.contract';
 import { AppEventValueObject } from '@modules/support/app/event-dispatcher/domain/src/value-objects/app-event.value-object';
 import { AppEventSources } from '@modules/support/app/event-dispatcher/infraestructure/app.event-sources';
 import { AppEvents } from '@modules/support/app/event-dispatcher/infraestructure/app.events';
 import { CommentEntity } from '../../../domain/src/entities/comment.entity';
 import { CommentEntitySchema } from '../../../domain/src/schemas/comment.schema';
 import { GenerateEntityIdService } from '../../../domain/src/services/generate-entity-id.service';
-import { ICommentRepository } from '../acl/comment.contract';
+import { ICommentRepository } from '../contracts/comment.contract';
 
 export class CommentService {
   constructor(

@@ -1,6 +1,6 @@
 import { AwsDynamoDbAdapter } from '@modules/shared/app/infraestructure/src/adapters/aws-dynamo-db.adapter';
 import { CommentEntity } from '../../../domain/src/entities/comment.entity';
-import { ICommentRepository } from '../../../application/src/acl/comment.contract';
+import { ICommentRepository } from '../../../application/src/contracts/comment.contract';
 
 export class CommentRepository implements ICommentRepository {
   async save(comment: CommentEntity) {

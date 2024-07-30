@@ -4,3 +4,4 @@
 - Nota: Una Sfn Express no puede llamar a otra Sfn de forma síncrona
 - Nota: Tampoco deberían haber variables de entorno en el Domain que apunte a un recurso de infraestructura
 - La entrada de las Sfn siempre tiene un body
+- Luego de setear una env es necesario hacer yarn install

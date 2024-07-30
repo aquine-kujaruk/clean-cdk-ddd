@@ -1,8 +1,8 @@
-import { IIdentifierRepository } from '@modules/shared/app/application/src/acl/identifier.contract';
+import { IIdentifierRepository } from '@modules/shared/app/application/src/contracts/identifier.contract';
 import { BookEntity } from '../../../domain/src/entities/book.entity';
 import { BookEntitySchema } from '../../../domain/src/schemas/book.schema';
 import { GenerateEntityIdService } from '../../../domain/src/services/generate-entity-id.service';
-import { IBookRepository } from '../acl/book.contract';
+import { IBookRepository } from '../contracts/book.contract';
 
 export class BookService {
   constructor(

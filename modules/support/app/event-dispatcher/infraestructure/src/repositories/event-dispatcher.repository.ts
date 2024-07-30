@@ -1,5 +1,5 @@
 import { PutEventsRequestEntry } from '@aws-sdk/client-eventbridge';
-import { IEventDispatcherRepository } from '../../../application/src/acl/event-dispatcher.contract';
+import { IEventDispatcherRepository } from '../../../application/src/contracts/event-dispatcher.contract';
 import { AwsEventBridgeAdapter } from '../adapters/aws-event-bridge.adapter';
 import { DateRepository } from '@modules/shared/app/infraestructure/src/repositories/date.repository';
 import { AppEventValueObject } from '../../../domain/src/value-objects/app-event.value-object';

@@ -1,7 +1,7 @@
 import { QueryCommandInput, UpdateCommandInput } from '@aws-sdk/lib-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { AwsDynamoDbAdapter } from '@modules/shared/app/infraestructure/src/adapters/aws-dynamo-db.adapter';
-import { IBookRepository } from '../../../application/src/acl/book.contract';
+import { IBookRepository } from '../../../application/src/contracts/book.contract';
 import { BookEntity } from '../../../domain/src/entities/book.entity';
 import { BookEntitySchema } from '../../../domain/src/schemas/book.schema';
 import { CommentEntitySchema } from '../../../domain/src/schemas/comment.schema';

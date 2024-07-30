@@ -5,24 +5,30 @@ import { RestApiRouteType } from '@modules/shared/app/infraestructure/lib/constr
 import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { AppRequestType } from '../api.requests';
 
+const { POST, GET, PUT, DELETE } = HttpMethod;
+
 export const PublicApiRoutes: RestApiRouteType<AppRequestType> = {
   'book/command/create-book': {
-    [HttpMethod.POST]: BookCommands.CREATE_BOOK,
+    [POST]: BookCommands.CREATE_BOOK,
   },
 
   'book/command/add-comment/{bookId}': {
-    [HttpMethod.POST]: BookCommands.ADD_COMMENT,
+    [POST]: BookCommands.ADD_COMMENT,
   },
 
   'book/event/verified-book': {
-    [HttpMethod.POST]: BookEvents.BOOK_VERIFIED,
+    [POST]: BookEvents.BOOK_VERIFIED,
   },
 
   'book/query/get-book/{bookId}': {
-    [HttpMethod.GET]: BookQueries.GET_BOOK,
+    [GET]: BookQueries.GET_BOOK,
   },
 
   'book/query/get-books-and-comments/{bookId}': {
-    [HttpMethod.GET]: BookQueries.GET_BOOK_AND_COMMENTS,
+    [GET]: BookQueries.GET_BOOK_AND_COMMENTS,
+  },
+
+  'book/query/get-books-and-comments/{bookId}/test': {
+    [GET]: BookQueries.GET_BOOK_AND_COMMENTS,
   },
 };

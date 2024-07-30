@@ -3,9 +3,9 @@ import { SimpleAuthorizer } from './simple-authorizer.lambda';
 import { PublicApi } from './public.api';
 import { NestedStack } from 'aws-cdk-lib';
 
-export class restApis extends NestedStack {
+export class RestApis extends NestedStack {
   constructor(scope: Construct) {
-    super(scope, restApis.name);
+    super(scope, RestApis.name);
 
     const authorizer = new SimpleAuthorizer(scope);
     const publicApi = new PublicApi(scope);

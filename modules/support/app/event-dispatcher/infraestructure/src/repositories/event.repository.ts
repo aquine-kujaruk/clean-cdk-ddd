@@ -3,7 +3,7 @@ import { constantCase } from 'change-case-all';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { IEventRepository } from '../../../application/src/acl/event.contract';
+import { IEventRepository } from '../../../application/src/contracts/event.contract';
 import { AppEvents } from '../../app.events';
 import { EventInput } from '../../event-input.type';
 

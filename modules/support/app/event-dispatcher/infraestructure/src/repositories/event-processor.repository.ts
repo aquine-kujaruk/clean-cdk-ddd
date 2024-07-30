@@ -3,7 +3,7 @@ import { AwsStepFunctionAdapter } from '@modules/shared/app/infraestructure/src/
 import {
   IEventProcessorRepository,
   InvokeHandlerPayload,
-} from '../../../application/src/acl/event-processor.contract';
+} from '../../../application/src/contracts/event-processor.contract';
 
 export class EventProcessorRepository implements IEventProcessorRepository {
   async invokeHandler(target: string, payload: InvokeHandlerPayload): Promise<void> {

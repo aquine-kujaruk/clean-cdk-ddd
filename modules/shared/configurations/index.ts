@@ -1,7 +1,11 @@
 import { App, Tags } from 'aws-cdk-lib';
 import { camelCase } from 'change-case-all';
 import dotenv from 'dotenv';
-dotenv.config({ path: '../../.env' });
+import path from 'path';
+
+
+const envs = path.resolve(__dirname, '../../../.env')
+dotenv.config({ path: envs });
 
 export type EnvVars = {
   [key: string]: string;

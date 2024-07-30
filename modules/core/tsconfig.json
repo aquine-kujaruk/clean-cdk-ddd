@@ -4,5 +4,5 @@
     "outDir": "dist",
     "rootDir": "../.."
   },
-  "include": ["app/**/*", "bin/app.ts", "../shared/app/infraestructure/src/acl/uuid.repository.ts", "../shared/app/infraestructure/src/acl/day-js.repository.ts", "../shared/app/application/src/acl/date.contract.ts", "../shared/app/application/src/acl/identifier.contract.ts"]
+  "include": ["app/**/*", "bin/app.ts", "../shared/app/infraestructure/src/contracts/uuid.repository.ts", "../shared/app/infraestructure/src/contracts/day-js.repository.ts", "../shared/app/application/src/contracts/date.contract.ts", "../shared/app/application/src/contracts/identifier.contract.ts"]
 }

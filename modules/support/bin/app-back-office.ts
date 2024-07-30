@@ -3,10 +3,10 @@
 import { Configurations } from '@modules/shared/configurations';
 import { App } from 'aws-cdk-lib';
 import 'source-map-support/register';
-import { SupportStack } from '../app/support.stack';
+import { BackOffice } from '../app/back-office';
 
 const app = new App();
 
 Configurations.setDefaulTags(app);
 
-new SupportStack(app, Configurations.getDynamicStackName(SupportStack.name));
+new BackOffice(app, Configurations.getStaticStackName(BackOffice.name));

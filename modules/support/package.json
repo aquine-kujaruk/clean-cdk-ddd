@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "main": "bin/app.ts",
   "scripts": {
-    "synth": "rm -rf cdk.out && npx cdk synth --all --quiet",
-    "deploy": "rm -rf cdk.out && npx cdk deploy --profile cdk-prisa-dev --all --require-approval never",
-    "destroy": "rm -rf cdk.out && npx cdk destroy --profile cdk-prisa-dev --all"
+    "synth": "rm -rf cdk.out && npx cdk synth -a",
+    "deploy": "rm -rf cdk.out && npx cdk deploy --profile cdk-prisa-dev -a",
+    "destroy": "rm -rf cdk.out && npx cdk destroy --profile cdk-prisa-dev --all",
+    "set-app:main": "npx ts-node --prefer-ts-exts bin/app.ts",
+    "set-app:back-office": "npx ts-node --prefer-ts-exts bin/app-back-office.ts",
+    "synth:main": "npm run synth 'npm run set-app:main' --all --quiet",
+    "synth:back-office": "npm run synth 'npm run set-app:back-office' --all --quiet",
+    "deploy:main": "npm run deploy 'npm run set-app:main'",
+    "deploy:back-office": "npm run deploy 'npm run set-app:back-office'",
+    "destroy:main": "npm run destroy 'npm run set-app:main' --all",
+    "destroy:back-office": "npm run destroy 'npm run set-app:back-office' --all"
   },
   "dependencies": {
     "@modules/shared": "1.0.0",

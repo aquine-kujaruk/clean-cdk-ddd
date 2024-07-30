@@ -46,7 +46,7 @@ export abstract class BaseBuilder<T, P> extends Construct {
     return pascalCase(name) + ulid();
   }
 
-  protected static getStatefulResourceName(name: string): string {
+  public static getStatefulResourceName(name: string): string {
     const splittedName = name.split('_');
     const identifier = splittedName.map((text) => camelCase(text)).join('_');
 

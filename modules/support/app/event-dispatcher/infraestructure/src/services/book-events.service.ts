@@ -1,7 +1,7 @@
 import { BookController } from '@modules/core/app/book/infraestructure/src/controllers/book.controller';
 import { AppEvents } from '@modules/support/app/event-dispatcher/infraestructure/app.events';
-import { IEventProcessorRepository } from '../../../application/src/acl/event-processor.contract';
-import { IEventRepository } from '../../../application/src/acl/event.contract';
+import { IEventProcessorRepository } from '../../../application/src/contracts/event-processor.contract';
+import { IEventRepository } from '../../../application/src/contracts/event.contract';
 import { EventInput } from '../../event-input.type';
 
 export class BookEventsService {
