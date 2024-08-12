@@ -1,44 +1,52 @@
+import { Stack } from 'aws-cdk-lib';
 import { IRule, Rule, RuleProps } from 'aws-cdk-lib/aws-events';
 import { Construct } from 'constructs';
 import _ from 'lodash';
+import {
+  getConstructName,
+  getStatelessResourceName,
+  getUniqueConstructName,
+} from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 interface RuleBuilderConstructProps extends RuleProps {}
 
-export class RuleBuilderConstruct extends BaseBuilder<Rule, RuleBuilderConstructProps> {
-  constructor(scope: Construct, id: string, props: RuleBuilderConstructProps) {
-    super(scope, id, props);
+export class RuleBuilderConstruct extends BaseBuilder<RuleBuilderConstructProps> {
+  public rule: Rule;
+
+  constructor(scope: Construct, name: string, props: RuleBuilderConstructProps) {
+    super(scope, name, props);
+
+    this.build();
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatelessResourceName(name);
+  public static get resourceName(): string {
+    return getStatelessResourceName(this.name);
   }
 
-  public static getArn(scope: Construct, name: string): string {
-    const { region, account } = BaseBuilder.getStack(scope);
-    return `arn:aws:events:${region}:${account}:rule:${RuleBuilderConstruct.getResourceName(name)}`;
+  public static getArn(scope: Construct): string {
+    const { region, account } = Stack.of(scope);
+    return `arn:aws:events:${region}:${account}:rule:${this.resourceName}`;
   }
 
-  public static getImportedResource(scope: Construct, name: string): IRule {
+  public static getImportedResource(scope: Construct): IRule {
     return Rule.fromEventRuleArn(
       scope,
-      BaseBuilder.getUniqueConstructName(name),
-      RuleBuilderConstruct.getArn(scope, name)
+      getUniqueConstructName(this.name),
+      this.getArn(scope)
     );
   }
 
-  public build(): Rule {
-    const rule = new Rule(
+  public build() {
+    this.rule = new Rule(
       this,
-      RuleBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
-          ruleName: RuleBuilderConstruct.getResourceName(this.id),
+          ruleName: getStatelessResourceName(this.name),
         } as Partial<RuleProps>,
         this.props
       )
     );
-
-    return rule;
   }
 }

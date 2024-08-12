@@ -4,6 +4,7 @@ import { Construct } from 'constructs';
 import { BookLambda } from './book.lambda';
 import { AddCommentStateMachine } from './state-machines/add-comment.state-machine';
 import { CreateBookStateMachine } from './state-machines/create-book.state-machine';
+import { BookTable } from '@modules/shared/app/infraestructure/lib/stateful-resources/databases/dynamo-db/book.table';
 
 const { STAGE } = Configurations.getEnvs();
 

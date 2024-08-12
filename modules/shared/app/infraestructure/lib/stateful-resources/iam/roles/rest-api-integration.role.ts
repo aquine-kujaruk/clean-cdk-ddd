@@ -24,7 +24,5 @@ export class RestApiIntegrationRole extends RoleBuilderConstruct {
         }),
       },
     });
-
-    super.build();
   }
 }

@@ -10,7 +10,5 @@ export class SimpleAuthorizer extends NodejsFunctionBuilderConstruct {
     super(scope, SimpleAuthorizer.name, {
       entry: path.resolve(__dirname, '../src/adapter/simple-authorizer.handler.ts'),
     });
-
-    super.build();
   }
 }

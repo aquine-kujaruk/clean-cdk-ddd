@@ -15,25 +15,20 @@ import {
 import { IFunction } from 'aws-cdk-lib/aws-lambda';
 import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
-import { BaseBuilder } from '../builders/base.builder';
-import { DynamoDbBuilderConstruct } from '../builders/dynamo-db.builder';
-import { EventBusBuilderConstruct } from '../builders/event-bus.builder';
-import { RoleBuilderConstruct } from '../builders/role.builder';
+import { RestApiIntegrationRole } from '../../stateful-resources/iam/roles/rest-api-integration.role';
 import {
   DynamoDbConstructType,
   EventBusConstructType,
   LambdaConstructType,
   StateMachineConstructType,
 } from '../construct.types';
+import { getConstructName, getStatelessResourceName } from '../resource-names';
 import {
   RestApiIntegrationProps,
   RestApiRequestDynamoDbIntegrationsProps,
   RestApiRequestIntegrationsProps,
   RestApiRequestLambdaIntegrationsProps,
 } from './rest-api.types';
-import { StateMachineBuilderConstruct } from '../builders/state-machine.builder';
-import { LambdaBuilderConstruct } from '../builders/lambda.builder';
-import { RestApiIntegrationRole } from '../../stateful-resources/iam/roles/rest-api-integration.role';
 
 export abstract class RestApiBaseIntegration {
   protected handler: IStateMachine | IFunction;
@@ -53,23 +48,16 @@ export abstract class RestApiBaseIntegration {
     }
 
     if (this.props.authorizerFunction) {
-      const handler = LambdaBuilderConstruct.getImportedResource(
-        this.scope,
-        this.props.authorizerFunction.name
-      );
+      const handler = (this.props.authorizerFunction as any).getImportedResource(this.scope);
 
       const authorizerName = `${this.props.authorizerFunction.name}Authorizer`;
 
-      const authorizer = new RequestAuthorizer(
-        this.scope,
-        BaseBuilder.getConstructName(authorizerName),
-        {
-          authorizerName: BaseBuilder.getStatelessResourceName(authorizerName),
-          handler,
-          identitySources: [IdentitySource.header('authorization')],
-          resultsCacheTtl: Duration.seconds(0),
-        }
-      );
+      const authorizer = new RequestAuthorizer(this.scope, getConstructName(authorizerName), {
+        authorizerName: getStatelessResourceName(authorizerName),
+        handler,
+        identitySources: [IdentitySource.header('authorization')],
+        resultsCacheTtl: Duration.seconds(0),
+      });
 
       options = {
         ...options,
@@ -109,7 +97,7 @@ class RestApiSfnIntegration extends RestApiBaseIntegration {
   constructor(scope: Construct, props: RestApiIntegrationProps & RestApiRequestIntegrationsProps) {
     super(scope, props);
 
-    const handler = StateMachineBuilderConstruct.getImportedResource(this.scope, props.target.name);
+    const handler = (this.props.target as any).getImportedResource(this.scope);
 
     const integration = StepFunctionsIntegration.startExecution(handler, {
       useDefaultMethodResponses: true,
@@ -133,7 +121,7 @@ class RestApiLambdaIntegration extends RestApiBaseIntegration {
   ) {
     super(scope, props);
 
-    const handler = LambdaBuilderConstruct.getImportedResource(this.scope, props.target.name);
+    const handler = (this.props.target as any).getImportedResource(this.scope);
 
     const integration = new LambdaIntegration(handler, {
       proxy: false,
@@ -208,11 +196,8 @@ class RestApiDaynamoDbIntegration extends RestApiBaseIntegration {
   ) {
     super(scope, props);
 
-    const TableName = DynamoDbBuilderConstruct.getResourceName(props.target.name);
-    const credentialsRole = RoleBuilderConstruct.getImportedResource(
-      scope,
-      RestApiIntegrationRole.name
-    );
+    const TableName = (props.target as any).resourceName;
+    const credentialsRole = RestApiIntegrationRole.getImportedResource(scope);
 
     let successfulIntegrationResponse = {
       statusCode: '200',
@@ -283,11 +268,8 @@ class RestApiEventBusIntegration extends RestApiBaseIntegration {
   constructor(scope: Construct, props: RestApiIntegrationProps & RestApiRequestIntegrationsProps) {
     super(scope, props);
 
-    const EventBusName = EventBusBuilderConstruct.getResourceName(props.target.name);
-    const credentialsRole = RoleBuilderConstruct.getImportedResource(
-      scope,
-      RestApiIntegrationRole.name
-    );
+    const EventBusName = (props.target as any).resourceName;
+    const credentialsRole = RestApiIntegrationRole.getImportedResource(scope);
 
     const integration = new AwsIntegration({
       service: 'events',

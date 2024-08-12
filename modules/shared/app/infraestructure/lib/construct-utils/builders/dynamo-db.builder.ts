@@ -3,31 +3,34 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { Table, TableProps } from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
 import _ from 'lodash';
+import { getConstructName, getStatefulResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
-export class DynamoDbBuilderConstruct extends BaseBuilder<Table, TableProps> {
-  constructor(scope: Construct, id: string, props: TableProps) {
-    super(scope, id, props);
+export class DynamoDbBuilderConstruct extends BaseBuilder<TableProps> {
+  public table: Table;
+
+  constructor(scope: Construct, name: string, props: TableProps) {
+    super(scope, name, props);
+
+    this.build();
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatefulResourceName(name);
+  public static get resourceName(): string {
+    return getStatefulResourceName(this.name);
   }
 
-  public build(): Table {
-    const table = new Table(
+  public build() {
+    this.table = new Table(
       this,
-      DynamoDbBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
-          tableName: DynamoDbBuilderConstruct.getResourceName(this.id),
+          tableName: getStatefulResourceName(this.name),
           removalPolicy: RemovalPolicy.DESTROY,
           billingMode: BillingMode.PAY_PER_REQUEST,
         } as Partial<TableProps>,
         this.props
       )
     );
-
-    return table;
   }
 }

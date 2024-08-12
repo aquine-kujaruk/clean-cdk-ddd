@@ -16,15 +16,10 @@ export class AppEventsRule extends RuleBuilderConstruct {
       },
       targets: AppEventsRule.getTargets(scope, props),
     });
-
-    super.build();
   }
 
   private static getTargets = (scope: Construct, props: RulesProps) => {
-    const logGroup = LogGroupBuilderConstruct.createResource(
-      scope,
-      `/aws/events/${AppEventsRule.name}`
-    );
+    const { logGroup } = new LogGroupBuilderConstruct(scope, `/aws/events/${AppEventsRule.name}`);
 
     return [
       new SqsQueue(props.queue),

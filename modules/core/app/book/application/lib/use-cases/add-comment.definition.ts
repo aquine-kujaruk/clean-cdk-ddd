@@ -22,7 +22,7 @@ export class AddCommentDefinition extends ChainableSfnDefinition {
 
     this.fail = new Fail(scope, 'Fail');
 
-    this.bookHandler = LambdaBuilderConstruct.getImportedResource(this.scope, BookLambda.name);
+    this.bookHandler = BookLambda.getImportedResource(this.scope);
   }
 
   public get definitionChain() {

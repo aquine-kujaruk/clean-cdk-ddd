@@ -7,7 +7,5 @@ export class AddCommentStateMachine extends StateMachineBuilderConstruct {
     super(scope, AddCommentStateMachine.name, {
       definitionJob: AddCommentDefinition,
     });
-
-    super.build();
   }
 }

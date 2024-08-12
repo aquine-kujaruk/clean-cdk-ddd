@@ -3,34 +3,29 @@ import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-node
 import { Construct } from 'constructs';
 import _ from 'lodash';
 import { LambdaRole } from '../../stateful-resources/iam/roles/lambda.role';
-import { BaseBuilder } from './base.builder';
+import { getConstructName, getStatelessResourceName } from '../resource-names';
 import { LambdaBuilderConstruct } from './lambda.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
-import { RoleBuilderConstruct } from './role.builder';
 
-export class NodejsFunctionBuilderConstruct extends BaseBuilder<
-  NodejsFunction,
-  NodejsFunctionProps
-> {
-  constructor(scope: Construct, id: string, props: NodejsFunctionProps) {
-    super(scope, id, props);
+export class NodejsFunctionBuilderConstruct extends LambdaBuilderConstruct {
+  constructor(scope: Construct, name: string, props: NodejsFunctionProps) {
+    super(scope, name, props);
   }
 
-  public build(): NodejsFunction | undefined {
-    // if (!super.isActive('function')) return;
+  public build() {
+    const functionName = getStatelessResourceName(this.name);
+    const { logGroup } = new LogGroupBuilderConstruct(this, `/aws/lambda/${functionName}`);
 
-    const functionName = LambdaBuilderConstruct.getResourceName(this.id);
-
-    const handler = new NodejsFunction(
+    this.handler = new NodejsFunction(
       this,
-      LambdaBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
           functionName,
           runtime: Runtime.NODEJS_20_X,
           architecture: Architecture.X86_64,
-          role: RoleBuilderConstruct.getImportedResource(this, LambdaRole.name),
-          logGroup: LogGroupBuilderConstruct.createResource(this, `/aws/lambda/${functionName}`),
+          role: LambdaRole.getImportedResource(this),
+          logGroup,
           bundling: {
             minify: false,
             externalModules: ['aws-sdk/*', '@aws-sdk/*'],
@@ -40,7 +35,5 @@ export class NodejsFunctionBuilderConstruct extends BaseBuilder<
         this.props
       )
     );
-
-    return handler;
   }
 }

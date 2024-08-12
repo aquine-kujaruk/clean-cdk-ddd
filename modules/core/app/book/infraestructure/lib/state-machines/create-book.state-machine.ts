@@ -7,7 +7,5 @@ export class CreateBookStateMachine extends StateMachineBuilderConstruct {
     super(scope, CreateBookStateMachine.name, {
       definitionJob: CreateBookDefinition,
     });
-
-    super.build();
   }
 }

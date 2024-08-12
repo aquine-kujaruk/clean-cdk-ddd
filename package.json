@@ -14,7 +14,7 @@
     "synth:shared": "cd modules/shared && npm run synth",
     "synth:core": "cd modules/core && npm run synth",
     "synth:support": "cd modules/support && npm run synth:main",
-    "synth:back-office": "cd modules/support && npm run deploy:back-office",
+    "synth:back-office": "cd modules/support && npm run synth:back-office",
     "deploy:shared": "cd modules/shared && npm run deploy",
     "deploy:core": "cd modules/core && npm run deploy",
     "deploy:support": "cd modules/support && npm run deploy:main",
@@ -22,7 +22,7 @@
     "destroy:shared": "cd modules/shared && npm run destroy",
     "destroy:core": "cd modules/core && npm run destroy",
     "destroy:support": "cd modules/support && npm run destroy:main",
-    "destroy:back-office": "cd modules/support && npm run deploy:back-office",
+    "destroy:back-office": "cd modules/support && npm run destroy:back-office",
     "hotswap": "cd modules/core && npm run hotswap",
     "generate:dist": "npm run synth:core && npm run synth:support"
   },

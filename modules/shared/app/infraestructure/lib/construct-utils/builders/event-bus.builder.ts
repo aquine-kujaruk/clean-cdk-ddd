@@ -1,39 +1,44 @@
 import { EventBus, EventBusProps, IEventBus } from 'aws-cdk-lib/aws-events';
 import { Construct } from 'constructs';
 import _ from 'lodash';
+import {
+  getConstructName,
+  getStatelessResourceName,
+  getUniqueConstructName,
+} from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
-export class EventBusBuilderConstruct extends BaseBuilder<EventBus, EventBusProps> {
-  constructor(scope: Construct, id: string, props: EventBusProps) {
-    super(scope, id, props);
+export class EventBusBuilderConstruct extends BaseBuilder<EventBusProps> {
+  public bus: EventBus;
+
+  constructor(scope: Construct, name: string, props: EventBusProps) {
+    super(scope, name, props);
+
+    this.build();
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatelessResourceName(name);
+  public static get resourceName(): string {
+    return getStatelessResourceName(this.name);
   }
 
-  public static getImportedResource(scope: Construct, name: string): IEventBus {
-    const stack = BaseBuilder.getStack(scope);
-    stack.getLogicalId;
+  public static getImportedResource(scope: Construct): IEventBus {
     return EventBus.fromEventBusName(
       scope,
-      BaseBuilder.getUniqueConstructName(name),
-      EventBusBuilderConstruct.getResourceName(name)
+      getUniqueConstructName(this.name),
+      this.resourceName
     );
   }
 
-  public build(): EventBus {
-    const bus = new EventBus(
+  public build() {
+    this.bus = new EventBus(
       this,
-      EventBusBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
-          eventBusName: EventBusBuilderConstruct.getResourceName(this.id),
+          eventBusName: getStatelessResourceName(this.name),
         } as Partial<EventBusProps>,
         this.props
       )
     );
-
-    return bus;
   }
 }

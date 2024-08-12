@@ -39,7 +39,5 @@ export class StateMachineRole extends RoleBuilderConstruct {
         }),
       },
     });
-
-    super.build();
   }
 }

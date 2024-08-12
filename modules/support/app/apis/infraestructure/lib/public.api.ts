@@ -12,7 +12,5 @@ export class PublicApi extends RestApiBuilderConstruct<AppRequestType> {
       appRoutes: ApiIntegrations,
       apiEventSource: AppEventSources.PUBLIC_API,
     });
-
-    super.build();
   }
 }

@@ -1,4 +1,4 @@
-import { RemovalPolicy } from 'aws-cdk-lib';
+import { RemovalPolicy, Stack } from 'aws-cdk-lib';
 import {
   Chain,
   DefinitionBody,
@@ -10,12 +10,15 @@ import {
 } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { LambdaInvokeTask } from '../sfn-custom-tasks/lambda-invoke.task';
 import { StateMachineRole } from '../../stateful-resources/iam/roles/state-machine.role';
+import {
+  getConstructName,
+  getStatelessResourceName,
+  getUniqueConstructName,
+} from '../resource-names';
+import { LambdaInvokeTask } from '../sfn-custom-tasks/lambda-invoke.task';
 import { BaseBuilder } from './base.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
-import { RoleBuilderConstruct } from './role.builder';
-import { inspect } from 'util';
 
 export abstract class ChainableSfnDefinition {
   constructor(protected readonly scope: Construct) {}
@@ -27,30 +30,31 @@ interface StateMachineBuilderConstructProps extends StateMachineProps {
   definitionJob: new (...args: any[]) => ChainableSfnDefinition;
 }
 
-export class StateMachineBuilderConstruct extends BaseBuilder<
-  StateMachine,
-  StateMachineBuilderConstructProps
-> {
-  constructor(scope: Construct, id: string, props: StateMachineBuilderConstructProps) {
-    super(scope, id, props);
+export class StateMachineBuilderConstruct extends BaseBuilder<StateMachineBuilderConstructProps> {
+  public handler?: StateMachine;
+
+  constructor(scope: Construct, name: string, props: StateMachineBuilderConstructProps) {
+    super(scope, name, props);
+
+    // if (super.isActive('stateMachine')) {
+      this.build();
+    // }
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatelessResourceName(name);
+  public static get resourceName(): string {
+    return getStatelessResourceName(this.name);
   }
 
-  public static getArn(scope: Construct, name: string): string {
-    const { region, account } = BaseBuilder.getStack(scope);
-    return `arn:aws:states:${region}:${account}:stateMachine:${StateMachineBuilderConstruct.getResourceName(
-      name
-    )}`;
+  public static getArn(scope: Construct): string {
+    const { region, account } = Stack.of(scope);
+    return `arn:aws:states:${region}:${account}:stateMachine:${this.resourceName}`;
   }
 
-  public static getImportedResource(scope: Construct, name: string): IStateMachine {
+  public static getImportedResource(scope: Construct): IStateMachine {
     return StateMachine.fromStateMachineName(
       scope,
-      BaseBuilder.getUniqueConstructName(name),
-      StateMachineBuilderConstruct.getResourceName(name)
+      getUniqueConstructName(this.name),
+      this.resourceName
     );
   }
 
@@ -60,7 +64,7 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
     for (const key in stateMachineProps.definitionSubstitutions) {
       if (!stateMachineProps.definitionSubstitutions[key])
         throw {
-          stateMachine: this.id,
+          stateMachine: this.name,
           key,
           error: new Error('Definition substitution values must be defined'),
         };
@@ -72,51 +76,46 @@ export class StateMachineBuilderConstruct extends BaseBuilder<
 
     if (!(startState instanceof LambdaInvokeTask && initializeContext))
       throw {
-        stateMachine: this.id,
+        stateMachine: this.name,
         error: new Error(
           `Start state must be an instance of "LambdaInvokeTask" with "initializeContext" payload attribute set to true`
         ),
       };
   }
 
-  public build(): StateMachine | undefined {
-    // if (!super.isActive('stateMachine')) return;
-
+  public build() {
     const stateMachineProps = this.props;
 
     this.validateBody(stateMachineProps);
 
-    const stateMachineName = StateMachineBuilderConstruct.getResourceName(this.id);
+    const stateMachineName = getStatelessResourceName(this.name);
 
     // Tiene que ser así para que tenga el scope correcto
     const { definitionChain } = new this.props.definitionJob(this);
 
     this.validateStartState(definitionChain.startState);
 
-    const handler = new StateMachine(
+    const { logGroup } = new LogGroupBuilderConstruct(this, `/aws/vendedlogs/states/${stateMachineName}`);
+
+    this.handler = new StateMachine(
       this,
-      StateMachineBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
           stateMachineName,
           definitionBody: DefinitionBody.fromChainable(definitionChain),
           stateMachineType: StateMachineType.EXPRESS,
           logs: {
-            destination: LogGroupBuilderConstruct.createResource(
-              this,
-              `/aws/vendedlogs/states/${stateMachineName}`
-            ),
+            destination: logGroup,
             level: LogLevel.ALL,
             includeExecutionData: true,
           },
           tracingEnabled: true,
           removalPolicy: RemovalPolicy.DESTROY,
-          role: RoleBuilderConstruct.getImportedResource(this, StateMachineRole.name),
+          role: StateMachineRole.getImportedResource(this),
         } as Partial<StateMachineProps>,
         stateMachineProps
       )
     );
-
-    return handler;
   }
 }

@@ -54,7 +54,5 @@ export class LambdaRole extends RoleBuilderConstruct {
         }),
       },
     });
-
-    super.build();
   }
 }

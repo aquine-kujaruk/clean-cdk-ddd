@@ -1,23 +1,18 @@
-import { Stack } from 'aws-cdk-lib';
-import { camelCase, pascalCase } from 'change-case-all';
 import { Construct } from 'constructs';
 import { readFileSync } from 'fs';
 import _ from 'lodash';
 import { resolve } from 'path';
-import { ulid } from 'ulidx';
 import dynamicResourcesJson from '../../../../../../../deploy-config/dynamic-resources.json';
 import { Configurations } from '../../../../../configurations';
 
-const { APP_NAME, STAGE, USER, npm_config_argv } = Configurations.getEnvs();
+const { npm_config_argv } = Configurations.getEnvs();
 
-export abstract class BaseBuilder<T, P> extends Construct {
-  constructor(scope: Construct, protected readonly id: string, protected readonly props: P) {
-    super(scope, id);
-    this.id = id;
-    this.props = props;
+export abstract class BaseBuilder<T> extends Construct {
+  constructor(scope: Construct, protected readonly name: string, protected readonly props: T) {
+    super(scope, name);
   }
 
-  protected abstract build(): T | undefined;
+  protected abstract build(): void;
 
   protected isActive(resourceType: string): boolean {
     if (npm_config_argv?.includes('generate:dist')) return true;
@@ -25,7 +20,7 @@ export abstract class BaseBuilder<T, P> extends Construct {
     const path = [this.packageName, resourceType].join('.');
 
     const resourcePathValue = _.get(dynamicResourcesJson, path)?.find(
-      (resourceName: string) => resourceName === this.id
+      (resourceName: string) => resourceName === this.name
     );
 
     return Boolean(resourcePathValue);
@@ -36,31 +31,5 @@ export abstract class BaseBuilder<T, P> extends Construct {
 
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     return packageJson.name;
-  }
-
-  public static getConstructName(name: string): string {
-    return pascalCase(name);
-  }
-
-  public static getUniqueConstructName(name: string): string {
-    return pascalCase(name) + ulid();
-  }
-
-  public static getStatefulResourceName(name: string): string {
-    const splittedName = name.split('_');
-    const identifier = splittedName.map((text) => camelCase(text)).join('_');
-
-    return `${APP_NAME}-${identifier}-${STAGE}`;
-  }
-
-  public static getStatelessResourceName(name: string): string {
-    const splittedName = name.split('_');
-    const identifier = splittedName.map((text) => camelCase(text)).join('_');
-
-    return `${APP_NAME}-${identifier}-${USER}`;
-  }
-
-  protected static getStack(scope: Construct): Stack {
-    return Stack.of(scope);
   }
 }

@@ -1,39 +1,43 @@
 import { IRole, Role, RoleProps } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import _ from 'lodash';
+import { getConstructName, getUniqueConstructName, getStatefulResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 interface RoleBuilderConstructProps extends RoleProps {}
 
-export class RoleBuilderConstruct extends BaseBuilder<Role, RoleBuilderConstructProps> {
-  constructor(scope: Construct, id: string, props: RoleBuilderConstructProps) {
-    super(scope, id, props);
+export class RoleBuilderConstruct extends BaseBuilder<RoleBuilderConstructProps> {
+  public role: Role;
+
+  constructor(scope: Construct, name: string, props: RoleBuilderConstructProps) {
+    super(scope, name, props);
+
+    this.build();
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatefulResourceName(name);
+  public static get resourceName(): string {
+    return getStatefulResourceName(this.name);
   }
 
-  public static getImportedResource(scope: Construct, name: string): IRole {
+  public static getImportedResource(scope: Construct): IRole {
     return Role.fromRoleName(
       scope,
-      BaseBuilder.getUniqueConstructName(name),
-      RoleBuilderConstruct.getResourceName(name)
+      getUniqueConstructName(this.name),
+      this.resourceName
     );
   }
 
-  public build(): Role {
-    const role = new Role(
+  public build() {
+    this.role = new Role(
       this,
-      RoleBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
-          roleName: RoleBuilderConstruct.getResourceName(this.id),
+          roleName: getStatefulResourceName(this.name),
         } as Partial<RoleProps>,
         this.props
       )
     );
-
-    return role;
+    console.log('getStatefulResourceName(this.name): ', getStatefulResourceName(this.name));
   }
 }

@@ -2,31 +2,34 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { Bucket, BucketProps } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import _ from 'lodash';
+import { getConstructName, getStatefulResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
-export class BucketBuilderConstruct extends BaseBuilder<Bucket, BucketProps> {
-  constructor(scope: Construct, id: string, props: BucketProps) {
-    super(scope, id, props);
+export class BucketBuilderConstruct extends BaseBuilder<BucketProps> {
+  public bucket: Bucket;
+
+  constructor(scope: Construct, name: string, props: BucketProps) {
+    super(scope, name, props);
+
+    this.build();
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatefulResourceName(name.toLowerCase());
+  public static get resourceName() {
+    return getStatefulResourceName(this.name.toLowerCase());
   }
 
-  public build(): Bucket {
-    const bucket = new Bucket(
+  public build() {
+    this.bucket = new Bucket(
       this,
-      BucketBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
-          bucketName: BucketBuilderConstruct.getResourceName(this.id),
+          bucketName: getStatefulResourceName(this.name.toLowerCase()),
           removalPolicy: RemovalPolicy.DESTROY,
           autoDeleteObjects: true,
         } as Partial<BucketProps>,
         this.props
       )
     );
-
-    return bucket;
   }
 }

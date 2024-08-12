@@ -21,9 +21,9 @@ export class CreateBookDefinition extends ChainableSfnDefinition {
 
     this.fail = new Fail(scope, 'Fail');
 
-    this.bookHandler = LambdaBuilderConstruct.getImportedResource(this.scope, BookLambda.name);
+    this.bookHandler = BookLambda.getImportedResource(this.scope);
   }
-
+  
   public get definitionChain() {
     return this[Steps.CREATE_BOOK].next(this[Steps.SAVE_BOOK]);
   }

@@ -1,7 +1,7 @@
 import { BookController } from '@modules/core/app/book/infraestructure/src/controllers/book.controller';
 import { RestApiIntegration } from '@modules/shared/app/infraestructure/lib/construct-utils/rest-apis/integration';
 import { RestApiAppControllersType } from '@modules/shared/app/infraestructure/lib/construct-utils/rest-apis/rest-api.types';
-import { MultiPurpose } from '@modules/shared/app/infraestructure/lib/stateful-resources/databases/dynamo-db/tables/multi-purpose.table';
+import { BookTable } from '@modules/shared/app/infraestructure/lib/stateful-resources/databases/dynamo-db/book.table';
 import { AppRequestType } from '@modules/support/app/apis/infraestructure/api.requests';
 import { AppEventsBus } from '@modules/support/app/event-dispatcher/infraestructure/lib/app-events.bus';
 import { BookCommands } from './book.commands';
@@ -18,7 +18,7 @@ export const BookApiIntegrations: RestApiAppControllersType<AppRequestType> = {
   [BookEvents.BOOK_VERIFIED]: RestApiIntegration.EventBridge({ target: AppEventsBus }),
 
   [BookQueries.GET_BOOK]: RestApiIntegration.DynamoDb({
-    target: MultiPurpose,
+    target: BookTable,
     query: {
       KeyConditionExpression: '#pk = :pk AND #sk = :sk',
       ExpressionAttributeNames: {

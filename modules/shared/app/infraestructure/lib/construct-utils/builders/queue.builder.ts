@@ -1,44 +1,46 @@
+import { Stack } from 'aws-cdk-lib';
 import { IQueue, Queue, QueueProps } from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
 import _ from 'lodash';
+import { getConstructName, getStatelessResourceName, getUniqueConstructName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
-export class QueueBuilderConstruct extends BaseBuilder<Queue, QueueProps> {
-  constructor(scope: Construct, id: string, props: QueueProps) {
-    super(scope, id, props);
+export class QueueBuilderConstruct extends BaseBuilder<QueueProps> {
+  public queue: Queue;
+
+  constructor(scope: Construct, name: string, props: QueueProps) {
+    super(scope, name, props);
+
+    this.build();
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatelessResourceName(name);
+  public static get resourceName(): string {
+    return getStatelessResourceName(this.name);
   }
 
-  public static getArn(scope: Construct, name: string): string {
-    const { region, account } = this.getStack(scope);
-    return `arn:aws:sqs:${region}:${account}:${QueueBuilderConstruct.getResourceName(name)}`;
+  public static getArn(scope: Construct): string {
+    const { region, account } = Stack.of(scope);
+    return `arn:aws:sqs:${region}:${account}:${this.resourceName}`;
   }
 
-  public static getImportedResource(scope: Construct, name: string): IQueue {
-    const stack = BaseBuilder.getStack(scope);
-    stack.getLogicalId;
+  public static getImportedResource(scope: Construct): IQueue {
     return Queue.fromQueueArn(
       scope,
-      BaseBuilder.getUniqueConstructName(name),
-      QueueBuilderConstruct.getArn(scope, name)
+      getUniqueConstructName(this.name),
+      this.getArn(scope)
     );
   }
 
-  public build(): Queue {
-    const bucket = new Queue(
+  public build() {
+    this.queue = new Queue(
       this,
-      QueueBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
-          queueName: QueueBuilderConstruct.getResourceName(this.id),
+          queueName: getStatelessResourceName(this.name),
         } as Partial<QueueProps>,
         this.props
       )
     );
-
-    return bucket;
   }
 }

@@ -14,6 +14,7 @@ import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { Construct } from 'constructs';
 import _ from 'lodash';
 import { Configurations } from '../../../../../configurations';
+import { getConstructName, getStatelessResourceName } from '../resource-names';
 import {
   RestApiAppControllersType,
   RestApiIntegrationProps,
@@ -32,28 +33,27 @@ type RestApiBuilderConstructProps<T extends string | number | symbol> = {
 } & RestApiProps;
 
 export class RestApiBuilderConstruct<T extends string | number | symbol> extends BaseBuilder<
-  RestApi,
   RestApiBuilderConstructProps<T>
 > {
-  constructor(scope: Construct, id: string, props: RestApiBuilderConstructProps<T>) {
-    super(scope, id, props);
+  public api: RestApi;
+
+  constructor(scope: Construct, name: string, props: RestApiBuilderConstructProps<T>) {
+    super(scope, name, props);
+
+    this.build();
   }
 
-  public static getResourceName(name: string): string {
-    return BaseBuilder.getStatelessResourceName(name);
+  public static get resourceName(): string {
+    return getStatelessResourceName(this.name);
   }
 
-  protected build(): RestApi {
-    const restApiName = RestApiBuilderConstruct.getResourceName(this.id);
+  protected build() {
+    const restApiName = getStatelessResourceName(this.name);
+    const { logGroup } = new LogGroupBuilderConstruct(this, `/aws/api-gateway/${restApiName}`);
 
-    const logGroup = LogGroupBuilderConstruct.createResource(
+    this.api = new RestApi(
       this,
-      `/aws/api-gateway/${restApiName}`
-    );
-
-    const api = new RestApi(
-      this,
-      RestApiBuilderConstruct.getConstructName(this.id),
+      getConstructName(this.name),
       _.merge(
         {
           restApiName,
@@ -74,20 +74,18 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
       )
     );
 
-    this.createUsagePlan(api);
-    this.createApiRoutes(api, this.props.apiRoutes);
-    this.createApiRoutesMethods(api, this.props.apiRoutes);
-
-    return api;
+    this.createUsagePlan();
+    this.createApiRoutes(this.props.apiRoutes);
+    this.createApiRoutesMethods(this.props.apiRoutes);
   }
 
-  private createUsagePlan(api: RestApi) {
-    const usagePlan = new UsagePlan(this, BaseBuilder.getConstructName(`${this.id}UsagePlan`), {
-      apiStages: [{ api, stage: api.deploymentStage }],
+  private createUsagePlan() {
+    const usagePlan = new UsagePlan(this, getConstructName(`${this.name}UsagePlan`), {
+      apiStages: [{ api: this.api, stage: this.api.deploymentStage }],
     });
 
     if (this.props.apiKeyValue) {
-      const apiKey = new ApiKey(this, BaseBuilder.getConstructName(`${this.id}ApiKey`), {
+      const apiKey = new ApiKey(this, getConstructName(`${this.name}ApiKey`), {
         value: this.props.apiKeyValue,
       });
       usagePlan.addApiKey(apiKey);
@@ -108,20 +106,20 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
     return this.addRoute(resource, parts, index + 1);
   }
 
-  private createApiRoutes(api: RestApi, routes: RestApiRouteType<T>) {
+  private createApiRoutes(routes: RestApiRouteType<T>) {
     const paths = Object.keys(routes);
 
     for (const path of paths) {
       const segment = path.split('/').filter((part) => part);
-      this.addRoute(api.root, segment);
+      this.addRoute(this.api.root, segment);
     }
   }
 
-  private createApiRoutesMethods(api: RestApi, routes: RestApiRouteType<T>) {
+  private createApiRoutesMethods(routes: RestApiRouteType<T>) {
     for (const path in routes) {
       for (const method in routes[path]) {
         const restApiIntegrationProps: RestApiIntegrationProps = {
-          api,
+          api: this.api,
           path,
           httpMethod: method as HttpMethod,
           apiEventSource: this.props.apiEventSource,

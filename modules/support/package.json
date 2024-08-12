@@ -5,7 +5,7 @@
   "scripts": {
     "synth": "rm -rf cdk.out && npx cdk synth -a",
     "deploy": "rm -rf cdk.out && npx cdk deploy --profile cdk-prisa-dev -a",
-    "destroy": "rm -rf cdk.out && npx cdk destroy --profile cdk-prisa-dev --all",
+    "destroy": "rm -rf cdk.out && npx cdk destroy --profile cdk-prisa-dev",
     "set-app:main": "npx ts-node --prefer-ts-exts bin/app.ts",
     "set-app:back-office": "npx ts-node --prefer-ts-exts bin/app-back-office.ts",
     "synth:main": "npm run synth 'npm run set-app:main' --all --quiet",
