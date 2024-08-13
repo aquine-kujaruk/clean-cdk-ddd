@@ -1,0 +1,55 @@
+{
+  "acknowledged-issue-numbers": [
+    29420,
+    29483
+  ],
+  "availability-zones:account=223034049865:region=eu-west-1": [
+    "eu-west-1a",
+    "eu-west-1b",
+    "eu-west-1c"
+  ],
+  "vpc-provider:account=223034049865:filter.tag:Name=pmbiller-mainVpc-dev:region=eu-west-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0aca2564daa027dbc",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "ownerAccountId": "223034049865",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0cbd77bdc70b36505",
+            "cidr": "10.0.0.0/18",
+            "availabilityZone": "eu-west-1a",
+            "routeTableId": "rtb-0f0da137cfbe998f6"
+          },
+          {
+            "subnetId": "subnet-0d53f41cdb099c3df",
+            "cidr": "10.0.64.0/18",
+            "availabilityZone": "eu-west-1b",
+            "routeTableId": "rtb-023748d23c452e280"
+          }
+        ]
+      },
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-0ca0fb3df91dc4119",
+            "cidr": "10.0.128.0/18",
+            "availabilityZone": "eu-west-1a",
+            "routeTableId": "rtb-075e0da28f8f8ab70"
+          },
+          {
+            "subnetId": "subnet-021e5e0f43e6d194b",
+            "cidr": "10.0.192.0/18",
+            "availabilityZone": "eu-west-1b",
+            "routeTableId": "rtb-0de70e2b3d1b85e8b"
+          }
+        ]
+      }
+    ]
+  }
+}

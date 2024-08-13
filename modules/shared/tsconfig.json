@@ -1,7 +1,0 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "dist",
-  },
-  "include": ["app/**/*", "bin/app.ts", "configurations/**/*", "app/infraestructure/src/repositories/date.repository.ts", "app/infraestructure/src/repositories/identifier.repository.ts", "../support/app/event-dispatcher/domain/contracts/event-bus.contract.ts", "../support/app/event-dispatcher/infraestructure/src/repositories/aws-event-bridge.repository.ts", "../support/app/event-dispatcher/infraestructure/src/adapters/aws-event-bridge.adapter.ts"]
-}

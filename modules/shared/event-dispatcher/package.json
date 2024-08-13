@@ -1,0 +1,16 @@
+{
+  "name": "@modules/event-dispatcher",
+  "version": "1.0.0",
+  "main": "bin/app.ts",
+  "scripts": {
+    "synth": "rm -rf cdk.out && npx cdk synth --profile cdk-prisa-dev --all --quiet",
+    "deploy": "rm -rf cdk.out && npx cdk deploy --profile cdk-prisa-dev --all --require-approval never",
+    "destroy": "rm -rf cdk.out && npx cdk destroy --profile cdk-prisa-dev --all",
+    "hotswap": "npx cdk deploy --hotswap --profile cdk-prisa-dev --all",
+    "generate:dist": "npx cdk synth --all"
+  },
+  "dependencies": {
+    "@modules/common": "1.0.0",
+    "@modules/books": "1.0.0"
+  }
+}

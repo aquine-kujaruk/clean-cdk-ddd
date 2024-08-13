@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "../.."
-  },
-  "include": ["app/**/*", "bin/app.ts", "../shared/app/infraestructure/src/contracts/uuid.repository.ts", "../shared/app/infraestructure/src/contracts/day-js.repository.ts", "../shared/app/application/src/contracts/date.contract.ts", "../shared/app/application/src/contracts/identifier.contract.ts"]
-}

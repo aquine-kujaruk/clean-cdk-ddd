@@ -3,7 +3,8 @@
   "version": "1.0.1",
   "private": true,
   "workspaces": [
-    "modules/*"
+    "modules/books",
+    "modules/shared/*"
   ],
   "scripts": {
     "build": "tsc",
@@ -11,24 +12,21 @@
     "test": "jest",
     "aws:config": "aws configure sso --profile cdk-prisa-dev",
     "aws:login": "aws sso login --profile cdk-prisa-dev",
-    "synth:shared": "cd modules/shared && npm run synth",
-    "synth:core": "cd modules/core && npm run synth",
-    "synth:support": "cd modules/support && npm run synth:main",
-    "synth:back-office": "cd modules/support && npm run synth:back-office",
-    "deploy:shared": "cd modules/shared && npm run deploy",
-    "deploy:core": "cd modules/core && npm run deploy",
-    "deploy:support": "cd modules/support && npm run deploy:main",
-    "deploy:back-office": "cd modules/support && npm run deploy:back-office",
-    "destroy:shared": "cd modules/shared && npm run destroy",
-    "destroy:core": "cd modules/core && npm run destroy",
-    "destroy:support": "cd modules/support && npm run destroy:main",
-    "destroy:back-office": "cd modules/support && npm run destroy:back-office",
-    "hotswap": "cd modules/core && npm run hotswap",
-    "generate:dist": "npm run synth:core && npm run synth:support"
+    "synth": "node scripts/run-cdk-scripts.js",
+    "deploy": "node scripts/run-cdk-scripts.js",
+    "destroy": "node scripts/run-cdk-scripts.js",
+    "hotswap": "node scripts/run-cdk-scripts.js",
+    "generate:dist": "node scripts/run-cdk-scripts.js"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@aws-cdk-containers/ecs-service-extensions": "^2.0.1-alpha.393",
     "@aws-sdk/credential-providers": "^3.592.0",
+    "@types/aws-lambda": "^8.10.138",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.4",
+    "@types/node": "^20.12.12",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.10",
     "aws-cdk": "^2.140.0",
     "aws-cdk-lib": "^2.140.0",
     "constructs": "^10.0.0",
@@ -38,11 +36,12 @@
     "lodash": "^4.17.21",
     "source-map-support": "^0.5.21",
     "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
     "ulidx": "^2.3.0",
     "uuid": "^10.0.0"
   },
-  "devDependencies": {
-    "@aws-cdk-containers/ecs-service-extensions": "^2.0.1-alpha.393",
+  "dependencies": {
     "@aws-lambda-powertools/batch": "^2.1.1",
     "@aws-lambda-powertools/parser": "^2.1.1-beta",
     "@aws-sdk/client-dynamodb": "^3.577.0",
@@ -51,16 +50,9 @@
     "@aws-sdk/client-sfn": "^3.577.0",
     "@aws-sdk/lib-dynamodb": "^3.577.0",
     "@aws-sdk/util-dynamodb": "^3.577.0",
-    "@types/aws-lambda": "^8.10.138",
-    "@types/lodash": "^4.17.4",
-    "@types/node": "^20.12.12",
-    "@types/uuid": "^10.0.0",
-    "@types/ws": "^8.5.10",
     "aws-lambda": "^1.0.7",
     "change-case-all": "^2.1.0",
     "dayjs": "^1.11.11",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
     "zod": "^3.23.8"
   }
 }

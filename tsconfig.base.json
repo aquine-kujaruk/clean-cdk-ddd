@@ -21,8 +21,8 @@
     "esModuleInterop": true,
     "baseUrl": "./modules",
     "paths": {
-      "@modules/shared/*": ["modules/shared/*"],
-      "@modules/core/*": ["modules/core/*"]
+      "@modules/books": ["modules/books/*"],
+      "@modules/shared/*": ["modules/shared/*"]
     },
     "typeRoots": ["./node_modules/@types"]
   },
