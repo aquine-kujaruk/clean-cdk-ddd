@@ -1,7 +1,7 @@
 import { IRole, Role, RoleProps } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getUniqueConstructName, getStatefulResourceName } from '../resource-names';
+import { getConstructName, getUniqueConstructName, getCommonResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 interface RoleBuilderConstructProps extends RoleProps {}
@@ -16,7 +16,7 @@ export class RoleBuilderConstruct extends BaseBuilder<RoleBuilderConstructProps>
   }
 
   public static get resourceName(): string {
-    return getStatefulResourceName(this.name);
+    return getCommonResourceName(this.name);
   }
 
   public static getImportedResource(scope: Construct): IRole {
@@ -33,11 +33,10 @@ export class RoleBuilderConstruct extends BaseBuilder<RoleBuilderConstructProps>
       getConstructName(this.name),
       _.merge(
         {
-          roleName: getStatefulResourceName(this.name),
+          roleName: getCommonResourceName(this.name),
         } as Partial<RoleProps>,
         this.props
       )
     );
-    console.log('getStatefulResourceName(this.name): ', getStatefulResourceName(this.name));
   }
 }

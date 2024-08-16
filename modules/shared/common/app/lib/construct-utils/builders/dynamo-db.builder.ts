@@ -3,7 +3,7 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { Table, TableProps } from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getStatefulResourceName } from '../resource-names';
+import { getConstructName, getCommonResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 export class DynamoDbBuilderConstruct extends BaseBuilder<TableProps> {
@@ -16,7 +16,7 @@ export class DynamoDbBuilderConstruct extends BaseBuilder<TableProps> {
   }
 
   public static get resourceName(): string {
-    return getStatefulResourceName(this.name);
+    return getCommonResourceName(this.name);
   }
 
   public build() {
@@ -25,7 +25,7 @@ export class DynamoDbBuilderConstruct extends BaseBuilder<TableProps> {
       getConstructName(this.name),
       _.merge(
         {
-          tableName: getStatefulResourceName(this.name),
+          tableName: getCommonResourceName(this.name),
           removalPolicy: RemovalPolicy.DESTROY,
           billingMode: BillingMode.PAY_PER_REQUEST,
         } as Partial<TableProps>,

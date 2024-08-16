@@ -5,7 +5,6 @@ import { Fail, JsonPath } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 import { BookController } from '../../src/infraestructure/controllers/book.controller';
 import { BookLambda } from '../book.lambda';
-import { Stack } from 'aws-cdk-lib';
 
 enum Steps {
   CREATE_BOOK = 'Create Book Object',
@@ -23,7 +22,7 @@ export class CreateBookDefinition extends ChainableSfnDefinition {
 
     this.bookHandler = BookLambda.getImportedResource(this.scope);
   }
-  
+
   public get definitionChain() {
     return this[Steps.CREATE_BOOK].next(this[Steps.SAVE_BOOK]);
   }

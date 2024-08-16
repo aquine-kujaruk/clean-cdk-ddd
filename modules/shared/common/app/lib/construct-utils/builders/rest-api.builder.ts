@@ -5,6 +5,7 @@ import {
   Cors,
   EndpointType,
   IResource,
+  IRestApi,
   LogGroupLogDestination,
   RestApi,
   RestApiProps,
@@ -14,7 +15,7 @@ import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { Construct } from 'constructs';
 import _ from 'lodash';
 import { Configurations } from '../../../../../../shared/configurations';
-import { getConstructName, getStatelessResourceName } from '../resource-names';
+import { getConstructName, getUniqueConstructName, getUserResourceName } from '../resource-names';
 import {
   RestApiAppControllersType,
   RestApiIntegrationProps,
@@ -44,11 +45,15 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
   }
 
   public static get resourceName(): string {
-    return getStatelessResourceName(this.name);
+    return getUserResourceName(this.name);
+  }
+
+  public static getImportedResource(scope: Construct, restApiId: string): IRestApi {
+    return RestApi.fromRestApiId(scope, getUniqueConstructName(this.name), restApiId);
   }
 
   protected build() {
-    const restApiName = getStatelessResourceName(this.name);
+    const restApiName = getUserResourceName(this.name);
     const { logGroup } = new LogGroupBuilderConstruct(this, `/aws/api-gateway/${restApiName}`);
 
     this.api = new RestApi(

@@ -1,5 +1,5 @@
-import { CommentEntity } from "../../domain/entities/comment.entity";
+import { Comment } from "../../domain/entities/comment.entity";
 
 export interface ICommentRepository {
-  save(comment: CommentEntity): Promise<void>;
+  save(comment: Comment): Promise<void>;
 }

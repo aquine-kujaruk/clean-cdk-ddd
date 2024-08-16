@@ -1,8 +1,8 @@
-import { IIdentifierRepository } from "../../application/contracts/identifier.contract";
-import { UuidAdapter } from "../adapters/uuid.adapter";
+import { IIdentifierRepository } from '../../application/contracts/identifier.contract';
+import { UlidAdapter } from '../adapters/ulid.adapter';
 
 export class IdentifierRepository implements IIdentifierRepository {
   generate() {
-    return UuidAdapter.generatev4();
+    return UlidAdapter.generateUlid();
   }
 }

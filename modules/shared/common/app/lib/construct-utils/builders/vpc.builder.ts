@@ -3,10 +3,11 @@ import { Construct } from 'constructs';
 import _ from 'lodash';
 import {
   getConstructName,
-  getStatefulResourceName,
+  getCommonResourceName,
   getUniqueConstructName,
 } from '../resource-names';
 import { BaseBuilder } from './base.builder';
+import { CfnOutput } from 'aws-cdk-lib';
 
 export class VpcBuilderConstruct extends BaseBuilder<VpcProps> {
   public vpc: Vpc;
@@ -18,13 +19,19 @@ export class VpcBuilderConstruct extends BaseBuilder<VpcProps> {
   }
 
   public static get resourceName(): string {
-    return getStatefulResourceName(this.name);
+    return getCommonResourceName(this.name);
   }
 
   public static getImportedResource(scope: Construct): IVpc {
-    return Vpc.fromLookup(scope, getUniqueConstructName(this.name), {
+    const vpc = Vpc.fromLookup(scope, getUniqueConstructName(this.name), {
       vpcName: this.resourceName,
     });
+
+    new CfnOutput(scope, "OutputVpn", {
+      value: vpc.vpcId
+    })
+
+    return vpc;
   }
 
   public build() {
@@ -33,7 +40,7 @@ export class VpcBuilderConstruct extends BaseBuilder<VpcProps> {
       getConstructName(this.name),
       _.merge(
         {
-          vpcName: getStatefulResourceName(this.name),
+          vpcName: getCommonResourceName(this.name),
           maxAzs: 2,
           natGateways: 1,
         } as Partial<VpcProps>,

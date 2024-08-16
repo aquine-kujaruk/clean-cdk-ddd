@@ -1,12 +1,14 @@
 import { Stack } from 'aws-cdk-lib';
+import { SubnetType } from 'aws-cdk-lib/aws-ec2';
 import { Architecture, Function, FunctionProps, IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { LambdaRole } from '../../stateful-resources/iam/roles/lambda.role';
+import { LambdaRole } from '../../resources/iam/roles/lambda.role';
+import { CoreVpc } from '../../resources/networking/vpcs/core.vpc';
 import {
   getConstructName,
-  getStatelessResourceName,
+  getUserResourceName,
   getUniqueConstructName,
 } from '../resource-names';
 import { BaseBuilder } from './base.builder';
@@ -24,7 +26,7 @@ export class LambdaBuilderConstruct extends BaseBuilder<FunctionProps | NodejsFu
   }
 
   public static get resourceName(): string {
-    return getStatelessResourceName(this.name);
+    return getUserResourceName(this.name);
   }
 
   public static getArn(scope: Construct): string {
@@ -37,7 +39,7 @@ export class LambdaBuilderConstruct extends BaseBuilder<FunctionProps | NodejsFu
   }
 
   public build() {
-    const functionName = getStatelessResourceName(this.name);
+    const functionName = getUserResourceName(this.name);
     const { logGroup } = new LogGroupBuilderConstruct(this, `/aws/lambda/${functionName}`);
 
     this.handler = new Function(
@@ -51,6 +53,10 @@ export class LambdaBuilderConstruct extends BaseBuilder<FunctionProps | NodejsFu
           architecture: Architecture.X86_64,
           role: LambdaRole.getImportedResource(this),
           logGroup,
+          vpc: CoreVpc.getImportedResource(this),
+          vpcSubnets: {
+            subnetType: SubnetType.PRIVATE_WITH_EGRESS,
+          },
         } as Partial<FunctionProps>,
         this.props as FunctionProps
       )

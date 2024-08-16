@@ -1,12 +1,22 @@
-import { IDateRepository } from "../../application/contracts/date.contract";
-import { DayJsAdapter } from "../adapters/day-js.adapter";
+import { DateType, IDateRepository } from '../../application/contracts/date.contract';
+import { DayJsAdapter } from '../adapters/day-js.adapter';
 
 export class DateRepository implements IDateRepository {
-  public getUnixMilliseconds() {
-    return DayJsAdapter.getUnixMilliseconds();
+  public getUnixMilliseconds(date?: DateType) {
+    return DayJsAdapter.getUnixMilliseconds(date);
   }
 
-  public getDynamoDbFriendlyTimestamp() {
-    return DayJsAdapter.getDynamoDbFriendlyTimestamp();
+  getUnixSeconds(date?: DateType) {
+    const timestamp = this.getUnixMilliseconds(date);
+
+    return Math.round(timestamp / 1000);
+  }
+
+  public getSortableDateFormat(date?: DateType) {
+    return DayJsAdapter.getUTCDateInSortableFormat(date);
+  }
+
+  public addMonths(months: number, date?: DateType) {
+    return DayJsAdapter.add(date, months, 'month');
   }
 }

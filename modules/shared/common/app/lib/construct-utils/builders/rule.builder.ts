@@ -4,7 +4,7 @@ import { Construct } from 'constructs';
 import _ from 'lodash';
 import {
   getConstructName,
-  getStatelessResourceName,
+  getUserResourceName,
   getUniqueConstructName,
 } from '../resource-names';
 import { BaseBuilder } from './base.builder';
@@ -21,7 +21,7 @@ export class RuleBuilderConstruct extends BaseBuilder<RuleBuilderConstructProps>
   }
 
   public static get resourceName(): string {
-    return getStatelessResourceName(this.name);
+    return getUserResourceName(this.name);
   }
 
   public static getArn(scope: Construct): string {
@@ -43,7 +43,7 @@ export class RuleBuilderConstruct extends BaseBuilder<RuleBuilderConstructProps>
       getConstructName(this.name),
       _.merge(
         {
-          ruleName: getStatelessResourceName(this.name),
+          ruleName: getUserResourceName(this.name),
         } as Partial<RuleProps>,
         this.props
       )

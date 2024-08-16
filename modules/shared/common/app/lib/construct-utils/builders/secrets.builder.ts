@@ -3,7 +3,7 @@ import { Construct } from 'constructs';
 import _ from 'lodash';
 import {
   getConstructName,
-  getStatefulResourceName
+  getCommonResourceName
 } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
@@ -17,7 +17,7 @@ export class SecretBuilderConstruct extends BaseBuilder<SecretProps> {
   }
 
   public static get resourceName(): string {
-    return getStatefulResourceName(this.name);
+    return getCommonResourceName(this.name);
   }
 
   public build() {
@@ -26,7 +26,7 @@ export class SecretBuilderConstruct extends BaseBuilder<SecretProps> {
       getConstructName(this.name),
       _.merge(
         {
-          secretName: getStatefulResourceName(this.name),
+          secretName: getCommonResourceName(this.name),
         } as Partial<SecretProps>,
         this.props
       )

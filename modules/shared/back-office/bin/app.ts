@@ -11,7 +11,7 @@ Configurations.setDefaulTags(app);
 
 const { AWS_ACCOUNT_ID, AWS_REGION } = Configurations.getEnvs();
 
-new BackOfficeStack(app, Configurations.getDynamicStackName(BackOfficeStack.name), {
+new BackOfficeStack(app, Configurations.getCommonStackName(BackOfficeStack.name), {
   env: {
     account: AWS_ACCOUNT_ID,
     region: AWS_REGION,

@@ -1,11 +1,12 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { DynamoDb } from './stateful-resources/databases';
-import { Ecs } from './stateful-resources/ecs';
-import { Roles } from './stateful-resources/iam';
-import { Vpcs } from './stateful-resources/networking';
-import { Secrets } from './stateful-resources/security';
-import { Buckets } from './stateful-resources/storages';
+import { DynamoDb } from './resources/databases';
+import { Ecs } from './resources/ecs';
+import { EventBridge } from './resources/event-bridge';
+import { Roles } from './resources/iam';
+import { Vpcs } from './resources/networking';
+import { Secrets } from './resources/security';
+import { Buckets } from './resources/storages';
 
 export class CommonStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -17,5 +18,6 @@ export class CommonStack extends Stack {
     new Secrets(this);
     new Vpcs(this);
     new Ecs(this);
+    new EventBridge(this);
   }
 }

@@ -12,11 +12,11 @@
     "test": "jest",
     "aws:config": "aws configure sso --profile cdk-prisa-dev",
     "aws:login": "aws sso login --profile cdk-prisa-dev",
-    "synth": "node scripts/run-cdk-scripts.js",
-    "deploy": "node scripts/run-cdk-scripts.js",
-    "destroy": "node scripts/run-cdk-scripts.js",
-    "hotswap": "node scripts/run-cdk-scripts.js",
-    "generate:dist": "node scripts/run-cdk-scripts.js"
+    "synth": "node scripts/run-cdk-command.js",
+    "deploy": "node scripts/run-cdk-command.js",
+    "destroy": "node scripts/run-cdk-command.js",
+    "hotswap": "node scripts/run-cdk-command.js",
+    "generate:dist": "node scripts/run-cdk-command.js"
   },
   "devDependencies": {
     "@aws-cdk-containers/ecs-service-extensions": "^2.0.1-alpha.393",
@@ -25,7 +25,6 @@
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.4",
     "@types/node": "^20.12.12",
-    "@types/uuid": "^10.0.0",
     "@types/ws": "^8.5.10",
     "aws-cdk": "^2.140.0",
     "aws-cdk-lib": "^2.140.0",
@@ -38,8 +37,7 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "ulidx": "^2.3.0",
-    "uuid": "^10.0.0"
+    "ulidx": "^2.3.0"
   },
   "dependencies": {
     "@aws-lambda-powertools/batch": "^2.1.1",

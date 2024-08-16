@@ -2,8 +2,8 @@ import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { LambdaRole } from '../../stateful-resources/iam/roles/lambda.role';
-import { getConstructName, getStatelessResourceName } from '../resource-names';
+import { LambdaRole } from '../../resources/iam/roles/lambda.role';
+import { getConstructName, getUserResourceName } from '../resource-names';
 import { LambdaBuilderConstruct } from './lambda.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
 
@@ -13,7 +13,7 @@ export class NodejsFunctionBuilderConstruct extends LambdaBuilderConstruct {
   }
 
   public build() {
-    const functionName = getStatelessResourceName(this.name);
+    const functionName = getUserResourceName(this.name);
     const { logGroup } = new LogGroupBuilderConstruct(this, `/aws/lambda/${functionName}`);
 
     this.handler = new NodejsFunction(

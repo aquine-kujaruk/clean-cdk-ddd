@@ -1,10 +1,13 @@
+import { marshall } from '@aws-sdk/util-dynamodb';
 import { AppRequestType } from '@modules/apis/app/api.requests';
-import { RestApiIntegration } from '@modules/common/app/lib/construct-utils/rest-apis/integration';
+import {
+  DynamoDbIntegration,
+  LambdaFunctionIntegration,
+  StateMachineIntegration,
+} from '@modules/common/app/lib/construct-utils/rest-apis/integrations';
 import { RestApiAppControllersType } from '@modules/common/app/lib/construct-utils/rest-apis/rest-api.types';
-import { BookTable } from '@modules/common/app/lib/stateful-resources/databases/dynamo-db/book.table';
-import { AppEventsBus } from '@modules/event-dispatcher/app/lib/app-events.bus';
+import { BookTable } from '@modules/common/app/lib/resources/databases/dynamo-db/book.table';
 import { BookCommands } from './book.commands';
-import { BookEvents } from './book.events';
 import { BookQueries } from './book.queries';
 import { BookLambda } from './lib/book.lambda';
 import { AddCommentStateMachine } from './lib/state-machines/add-comment.state-machine';
@@ -12,32 +15,39 @@ import { CreateBookStateMachine } from './lib/state-machines/create-book.state-m
 import { BookController } from './src/infraestructure/controllers/book.controller';
 
 export const BookApiIntegrations: RestApiAppControllersType<AppRequestType> = {
-  [BookCommands.CREATE_BOOK]: RestApiIntegration.StateMachine({ target: CreateBookStateMachine }),
-  [BookCommands.ADD_COMMENT]: RestApiIntegration.StateMachine({ target: AddCommentStateMachine }),
+  [BookCommands.CREATE_BOOK]: StateMachineIntegration({ target: CreateBookStateMachine }),
+  [BookCommands.ADD_COMMENT]: StateMachineIntegration({ target: AddCommentStateMachine }),
 
-  [BookEvents.BOOK_VERIFIED]: RestApiIntegration.EventBridge({ target: AppEventsBus }),
+  // [BookEvents.BOOK_VERIFIED]: EventBusIntegration({
+  //   target: DomainEventsBus,
+  //   eventType: BookEvents.BOOK_VERIFIED,
+  // }),
 
-  [BookQueries.GET_BOOK]: RestApiIntegration.DynamoDb({
+  [BookQueries.GET_BOOK]: DynamoDbIntegration({
     target: BookTable,
     query: {
       KeyConditionExpression: '#pk = :pk AND #sk = :sk',
       ExpressionAttributeNames: {
         '#pk': 'PK',
         '#sk': 'SK',
+        '#name': 'name',
       },
-      ExpressionAttributeValues: {
-        ':pk': { S: 'BOOK' },
-        ':sk': { S: "BOOK#$input.params('bookId')" },
-      },
+      ExpressionAttributeValues: marshall({
+        ':pk': "BOOK#$input.params('bookId')",
+        ':sk': 'METADATA',
+      }),
+      ProjectionExpression: 'id, #name, commentsCount, createdAtUTC, updatedAtUTC',
     },
     selectedFields: {
       id: '$field.id.S',
       name: '$field.name.S',
       commentsCount: '$field.commentsCount.N',
+      createdAtUTC: '$field.createdAtUTC.S',
+      updatedAtUTC: '$field.updatedAtUTC.S',
     },
   }),
 
-  [BookQueries.GET_BOOK_AND_COMMENTS]: RestApiIntegration.Lambda({
+  [BookQueries.GET_BOOK_AND_COMMENTS]: LambdaFunctionIntegration({
     target: BookLambda,
     // authorizerFunction: ApiAuthorizersInfraestructureLambda,
     handlerProps: {

@@ -1,14 +1,17 @@
-import { BookEntity, BookEntityType } from '../../domain/entities/book.entity';
-import { CommentEntityType } from '../../domain/entities/comment.entity';
+import { Book } from '../../domain/entities/book.entity';
+import { BookProps } from '../../domain/schemas/book.schema';
+import { CommentProps } from '../../domain/schemas/comment.schema';
 
-type GetBookWithCommentsResponse = BookEntityType & {
-  comments: Omit<CommentEntityType, 'bookId'>[];
+export type BookComment = Pick<CommentProps, 'summary'> & { commentId: string };
+
+type BookWithComments = BookProps & {
+  comments: BookComment[];
 };
 
 export interface IBookRepository {
-  save(book: BookEntity): Promise<void>;
+  save(book: Book): Promise<void>;
 
-  getBookWithComments(bookId: string): Promise<GetBookWithCommentsResponse>;
+  getBookWithComments(bookId: string): Promise<BookWithComments>;
 
   incrementCommentsCounter(id: string): Promise<void>;
 }

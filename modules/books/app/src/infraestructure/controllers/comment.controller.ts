@@ -1,13 +1,13 @@
-import { IdentifierRepository } from '@modules/common/app/src/infraestructure/repositories/identifier.repository';
-import { CommentService } from '../../application/services/comment.service';
-import { CommentEntity } from '../../domain/entities/comment.entity';
-import { CommentRepository } from '../repositories/comment.repository';
-import { EventDispatcherRepository } from '@modules/event-dispatcher/app/src/infraestructure/repositories/event-dispatcher.repository';
 import { BaseController } from '@modules/common/app/src/infraestructure/controllers/base.controller';
+import { IdentifierRepository } from '@modules/common/app/src/infraestructure/repositories/identifier.repository';
+import { DomainEventsRepository } from '@modules/domain-events-dispatcher/app/src/infraestructure/repositories/domain-events.repository';
+import { CommentService } from '../../application/services/comment.service';
+import { Comment } from '../../domain/entities/comment.entity';
+import { CommentRepository } from '../repositories/comment.repository';
 
 const identifierRepository = new IdentifierRepository();
 const commentRepository = new CommentRepository();
-const awsEventBridgeRepository = new EventDispatcherRepository();
+const awsEventBridgeRepository = new DomainEventsRepository();
 
 const commentService = new CommentService(
   identifierRepository,
@@ -17,20 +17,20 @@ const commentService = new CommentService(
 
 export class CommentController extends BaseController {
   static async createComment(input: any) {
-    const { text, bookId } = input;
+    const { bookId, content } = input;
 
-    return commentService.createComment(text, bookId);
+    return commentService.createComment(bookId, content);
   }
 
   static async saveComment(input: any) {
-    const comment = new CommentEntity(input);
+    const comment = new Comment(input);
 
     return commentService.saveComment(comment);
   }
 
   static async sendCommentCreatedEvent(input: any) {
-    const { id, bookId } = input;
+    const comment = new Comment(input);
 
-    return commentService.sendCommentCreatedEvent(id, bookId);
+    return commentService.sendCommentCreatedEvent(comment);
   }
 }

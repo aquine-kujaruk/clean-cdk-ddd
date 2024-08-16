@@ -23,7 +23,7 @@ export interface HandlerProps extends StateMachineExecutionProps {
   input: Record<string, any>;
 }
 
-export class LambdaHandlerRouter {
+export class ControllerRouter {
   constructor(
     private readonly props: HandlerProps,
     private readonly controllers: ControllerClassType[]

@@ -2,7 +2,7 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { Bucket, BucketProps } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getStatefulResourceName } from '../resource-names';
+import { getConstructName, getCommonResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 export class BucketBuilderConstruct extends BaseBuilder<BucketProps> {
@@ -15,7 +15,7 @@ export class BucketBuilderConstruct extends BaseBuilder<BucketProps> {
   }
 
   public static get resourceName() {
-    return getStatefulResourceName(this.name.toLowerCase());
+    return getCommonResourceName(this.name.toLowerCase());
   }
 
   public build() {
@@ -24,7 +24,7 @@ export class BucketBuilderConstruct extends BaseBuilder<BucketProps> {
       getConstructName(this.name),
       _.merge(
         {
-          bucketName: getStatefulResourceName(this.name.toLowerCase()),
+          bucketName: getCommonResourceName(this.name.toLowerCase()),
           removalPolicy: RemovalPolicy.DESTROY,
           autoDeleteObjects: true,
         } as Partial<BucketProps>,

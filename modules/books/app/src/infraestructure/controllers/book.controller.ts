@@ -1,7 +1,7 @@
 import { BaseController } from '@modules/common/app/src/infraestructure/controllers/base.controller';
 import { IdentifierRepository } from '@modules/common/app/src/infraestructure/repositories/identifier.repository';
 import { BookService } from '../../application/services/book.service';
-import { BookEntity } from '../../domain/entities/book.entity';
+import { Book } from '../../domain/entities/book.entity';
 import { BookRepository } from '../repositories/book.repository';
 
 const identifierRepository = new IdentifierRepository();
@@ -18,7 +18,7 @@ export class BookController extends BaseController {
   }
 
   static async saveBook(input: any) {
-    const book = new BookEntity(input);
+    const book = new Book(input);
     const response = await bookService.saveBook(book);
 
     return response;

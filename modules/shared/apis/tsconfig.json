@@ -7,5 +7,5 @@
   "include": [
     "app/**/*",
     "bin/app.ts"
-  ]
+, "../common/app/lib/resources/api-gateway/rest-apis/public.api.ts", "../common/app/lib/construct-utils/rest-apis/integrations"  ]
 }

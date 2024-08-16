@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@modules/books": "1.0.0",
-    "@modules/event-dispatcher": "1.0.0",
+    "@modules/domain-events-dispatcher": "1.0.0",
     "@modules/back-office": "1.0.0",
     "@modules/apis": "1.0.0"
   }

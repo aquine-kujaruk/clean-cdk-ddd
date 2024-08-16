@@ -1,22 +1,20 @@
-import { z } from 'zod';
-import { CommentEntitySchema } from '../schemas/comment.schema';
+import { BaseEntity } from '@modules/common/app/src/domain/entities/base.entity';
+import { CommentEntitySchema, CommentProps } from '../schemas/comment.schema';
 
-export type CommentEntityType = z.infer<typeof CommentEntitySchema>;
-
-export class CommentEntity {
+export class Comment extends BaseEntity {
   public readonly id: string;
-  public readonly text: string;
+  public readonly content: string;
   public readonly bookId: string;
+  public readonly summary: string;
 
-  constructor(props: CommentEntityType) {
+  constructor(props: CommentProps) {
+    super();
+
     CommentEntitySchema.parse(props);
 
     this.id = props.id;
-    this.text = props.text;
     this.bookId = props.bookId;
-  }
-
-  static getCommentCreatedEventMessage(commentId: string, bookId: string) {
-    return { commentId, bookId };
+    this.content = props.content;
+    this.summary = props.summary;
   }
 }

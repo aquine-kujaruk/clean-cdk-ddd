@@ -1,5 +1,5 @@
 import { IIdentifierRepository } from '@modules/common/app/src/application/contracts/identifier.contract';
-import { BookEntity } from '../../domain/entities/book.entity';
+import { Book } from '../../domain/entities/book.entity';
 import { BookEntitySchema } from '../../domain/schemas/book.schema';
 import { GenerateEntityIdService } from '../../domain/services/generate-entity-id.service';
 import { IBookRepository } from '../contracts/book.contract';
@@ -14,12 +14,12 @@ export class BookService {
     const identifier = this.identifierRepository.generate();
 
     const id = GenerateEntityIdService.getBookId(identifier);
-    const book = new BookEntity({ id, name });
+    const book = new Book({ id, name });
 
     return book;
   }
 
-  async saveBook(book: BookEntity) {
+  async saveBook(book: Book) {
     BookEntitySchema.parse(book);
 
     await this.bookRepository.save(book);

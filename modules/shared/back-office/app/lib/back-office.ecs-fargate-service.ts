@@ -1,7 +1,7 @@
 import { EcsFargateServiceBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/ecs-fargate-service.builder';
-import { BackOfficeCluster } from '@modules/common/app/lib/stateful-resources/ecs/clusters/back-office.cluster';
-import { MainVpc } from '@modules/common/app/lib/stateful-resources/networking/vpcs/main.vpc';
-import { BackOfficeBucket } from '@modules/common/app/lib/stateful-resources/storages/buckets/back-office.bucket';
+import { BackOfficeCluster } from '@modules/common/app/lib/resources/ecs/clusters/back-office.cluster';
+import { CoreVpc } from '@modules/common/app/lib/resources/networking/vpcs/core.vpc';
+import { BackOfficeBucket } from '@modules/common/app/lib/resources/storages/buckets/back-office.bucket';
 import { aws_ecs, Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import dotenv from 'dotenv';
@@ -16,7 +16,7 @@ export class BackOfficeEcsFargate extends EcsFargateServiceBuilderConstruct {
       : 8055;
 
     super(scope, BackOfficeEcsFargate.name, {
-      cluster: BackOfficeCluster.getImportedResource(scope, MainVpc.getImportedResource(scope)),
+      cluster: BackOfficeCluster.getImportedResource(scope, CoreVpc.getImportedResource(scope)),
       taskImageOptions: {
         image: aws_ecs.ContainerImage.fromAsset(path.join(__dirname, '../src')),
         containerPort,

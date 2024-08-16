@@ -1,15 +1,14 @@
 import { Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { SimpleAuthorizer } from './authorizers/simple.authorizer';
 import { PublicApi } from './public.api';
-import { SimpleAuthorizer } from './simple-authorizer.lambda';
 
-export class RestApisStack extends Stack {
+export class ApisStack extends Stack {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const authorizer = new SimpleAuthorizer(this);
-    const publicApi = new PublicApi(this);
+    new SimpleAuthorizer(this);
 
-    publicApi.node.addDependency(authorizer);
+    new PublicApi(this);
   }
 }

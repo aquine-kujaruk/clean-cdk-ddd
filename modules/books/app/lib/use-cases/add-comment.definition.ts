@@ -38,8 +38,8 @@ export class AddCommentDefinition extends ChainableSfnDefinition {
         controller: CommentController,
         methodName: CommentController.createComment.name,
         input: {
-          text: JsonPath.stringAt('$.body.text'),
           bookId: JsonPath.stringAt('$.path.bookId'),
+          content: JsonPath.stringAt('$.body.content')
         },
         initializeContext: true,
       },

@@ -10,10 +10,10 @@ import {
 } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { StateMachineRole } from '../../stateful-resources/iam/roles/state-machine.role';
+import { StateMachineRole } from '../../resources/iam/roles/state-machine.role';
 import {
   getConstructName,
-  getStatelessResourceName,
+  getUserResourceName,
   getUniqueConstructName,
 } from '../resource-names';
 import { LambdaInvokeTask } from '../sfn-custom-tasks/lambda-invoke.task';
@@ -42,7 +42,7 @@ export class StateMachineBuilderConstruct extends BaseBuilder<StateMachineBuilde
   }
 
   public static get resourceName(): string {
-    return getStatelessResourceName(this.name);
+    return getUserResourceName(this.name);
   }
 
   public static getArn(scope: Construct): string {
@@ -88,7 +88,7 @@ export class StateMachineBuilderConstruct extends BaseBuilder<StateMachineBuilde
 
     this.validateBody(stateMachineProps);
 
-    const stateMachineName = getStatelessResourceName(this.name);
+    const stateMachineName = getUserResourceName(this.name);
 
     // Tiene que ser así para que tenga el scope correcto
     const { definitionChain } = new this.props.definitionJob(this);

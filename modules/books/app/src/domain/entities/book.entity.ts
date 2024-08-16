@@ -1,14 +1,14 @@
-import { z } from 'zod';
-import { BookEntitySchema } from '../schemas/book.schema';
+import { BaseEntity } from '@modules/common/app/src/domain/entities/base.entity';
+import { BookProps, BookEntitySchema } from '../schemas/book.schema';
 
-export type BookEntityType = z.infer<typeof BookEntitySchema>;
-
-export class BookEntity {
+export class Book extends BaseEntity {
   public readonly id: string;
   public readonly name: string;
   public readonly commentsCount: number;
 
-  constructor(props: BookEntityType) {
+  constructor(props: BookProps) {
+    super();
+
     BookEntitySchema.parse(props);
 
     this.id = props.id;

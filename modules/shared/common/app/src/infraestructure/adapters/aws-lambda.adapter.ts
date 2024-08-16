@@ -3,7 +3,7 @@ import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
 const lambdaClient = new LambdaClient();
 
 export class AwsLambdaAdapter {
-  static async invokeLambdaAsync<T>(FunctionName: string, payload: T): Promise<void> {
+  static async invokeLambdaAsync(FunctionName: string, payload: Record<string, any>): Promise<void> {
     const command = new InvokeCommand({
       FunctionName,
       Payload: JSON.stringify(payload),

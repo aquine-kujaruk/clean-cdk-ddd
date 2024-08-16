@@ -1,11 +1,7 @@
 import { EventBus, EventBusProps, IEventBus } from 'aws-cdk-lib/aws-events';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import {
-  getConstructName,
-  getStatelessResourceName,
-  getUniqueConstructName,
-} from '../resource-names';
+import { getCommonResourceName, getConstructName, getUniqueConstructName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 export class EventBusBuilderConstruct extends BaseBuilder<EventBusProps> {
@@ -18,15 +14,11 @@ export class EventBusBuilderConstruct extends BaseBuilder<EventBusProps> {
   }
 
   public static get resourceName(): string {
-    return getStatelessResourceName(this.name);
+    return getCommonResourceName(this.name);
   }
 
   public static getImportedResource(scope: Construct): IEventBus {
-    return EventBus.fromEventBusName(
-      scope,
-      getUniqueConstructName(this.name),
-      this.resourceName
-    );
+    return EventBus.fromEventBusName(scope, getUniqueConstructName(this.name), this.resourceName);
   }
 
   public build() {
@@ -35,7 +27,7 @@ export class EventBusBuilderConstruct extends BaseBuilder<EventBusProps> {
       getConstructName(this.name),
       _.merge(
         {
-          eventBusName: getStatelessResourceName(this.name),
+          eventBusName: getCommonResourceName(this.name),
         } as Partial<EventBusProps>,
         this.props
       )

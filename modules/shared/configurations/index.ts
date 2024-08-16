@@ -46,11 +46,11 @@ export class Configurations {
     return tags.forEach((tag) => Tags.of(app).add(tag.key, tag.value));
   }
 
-  static getDynamicStackName(name: string) {
+  static getUserStackName(name: string) {
     return `${Configurations.getEnvs()?.APP_NAME}-${name}-${Configurations.getEnvs()?.USER}`;
   }
 
-  static getStaticStackName(name: string) {
+  static getCommonStackName(name: string) {
     return `${Configurations.getEnvs()?.APP_NAME}-${name}-${Configurations.getEnvs()?.STAGE}`;
   }
 }

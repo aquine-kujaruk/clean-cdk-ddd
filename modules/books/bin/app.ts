@@ -9,4 +9,4 @@ const app = new App();
 
 Configurations.setDefaulTags(app);
 
-new BookStack(app, Configurations.getDynamicStackName(BookStack.name));
+new BookStack(app, Configurations.getUserStackName(BookStack.name));

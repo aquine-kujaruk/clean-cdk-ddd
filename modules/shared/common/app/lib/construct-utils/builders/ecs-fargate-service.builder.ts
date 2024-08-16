@@ -6,8 +6,8 @@ import {
 } from 'aws-cdk-lib/aws-ecs-patterns';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { EcsTaskRole } from '../../stateful-resources/iam/roles/ecs-task.role';
-import { getConstructName, getStatefulResourceName } from '../resource-names';
+import { EcsTaskRole } from '../../resources/iam/roles/ecs-task.role';
+import { getConstructName, getCommonResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 export class EcsFargateServiceBuilderConstruct extends BaseBuilder<ApplicationLoadBalancedFargateServiceProps> {
@@ -20,7 +20,7 @@ export class EcsFargateServiceBuilderConstruct extends BaseBuilder<ApplicationLo
   }
 
   public static get resourceName(): string {
-    return getStatefulResourceName(this.name);
+    return getCommonResourceName(this.name);
   }
 
   private get runtimePlatform() {
@@ -36,7 +36,7 @@ export class EcsFargateServiceBuilderConstruct extends BaseBuilder<ApplicationLo
       getConstructName(this.name),
       _.merge(
         {
-          serviceName: getStatefulResourceName(this.name),
+          serviceName: getCommonResourceName(this.name),
           runtimePlatform: this.runtimePlatform,
           taskImageOptions: {
             taskRole: EcsTaskRole.getImportedResource(this),
@@ -45,7 +45,7 @@ export class EcsFargateServiceBuilderConstruct extends BaseBuilder<ApplicationLo
           memoryLimitMiB: 512,
           desiredCount: 1,
           publicLoadBalancer: true,
-          // capacityProviderStrategies: [{ capacityProvider: 'FARGATE_SPOT', weight: 1 }],
+          capacityProviderStrategies: [{ capacityProvider: 'FARGATE_SPOT', weight: 1 }],
         } as Partial<ApplicationLoadBalancedFargateServiceProps>,
         this.props
       )

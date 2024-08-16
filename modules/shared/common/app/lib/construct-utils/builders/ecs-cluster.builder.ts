@@ -3,7 +3,7 @@ import { IVpc } from 'aws-cdk-lib/aws-ec2';
 import { Cluster, ClusterProps, ICluster } from 'aws-cdk-lib/aws-ecs';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getStatefulResourceName } from '../resource-names';
+import { getConstructName, getCommonResourceName } from '../resource-names';
 import { BaseBuilder } from './base.builder';
 
 export class EcsClusterBuilderConstruct extends BaseBuilder<ClusterProps> {
@@ -16,7 +16,7 @@ export class EcsClusterBuilderConstruct extends BaseBuilder<ClusterProps> {
   }
 
   public static get resourceName(): string {
-    return getStatefulResourceName(this.name);
+    return getCommonResourceName(this.name);
   }
 
   public static getArn(scope: Construct): string {
@@ -37,7 +37,7 @@ export class EcsClusterBuilderConstruct extends BaseBuilder<ClusterProps> {
       getConstructName(this.name),
       _.merge(
         {
-          clusterName: getStatefulResourceName(this.name),
+          clusterName: getCommonResourceName(this.name),
         } as Partial<ClusterProps>,
         this.props
       )

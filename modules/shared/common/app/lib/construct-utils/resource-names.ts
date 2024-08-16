@@ -12,14 +12,14 @@ export const getUniqueConstructName = (name: string) => {
   return pascalCase(name) + ulid();
 };
 
-export const getStatefulResourceName = (name: string) => {
+export const getCommonResourceName = (name: string) => {
   const splittedName = name.split('_');
   const identifier = splittedName.map((text) => camelCase(text)).join('_');
 
   return `${APP_NAME}-${identifier}-${STAGE}`;
 };
 
-export const getStatelessResourceName = (name: string) => {
+export const getUserResourceName = (name: string) => {
   const splittedName = name.split('_');
   const identifier = splittedName.map((text) => camelCase(text)).join('_');
 

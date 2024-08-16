@@ -11,7 +11,7 @@ Configurations.setDefaulTags(app);
 
 const { AWS_ACCOUNT_ID, AWS_REGION } = Configurations.getEnvs();
 
-new CommonStack(app, Configurations.getStaticStackName(CommonStack.name), {
+new CommonStack(app, Configurations.getCommonStackName(CommonStack.name), {
   env: {
     account: AWS_ACCOUNT_ID,
     region: AWS_REGION,

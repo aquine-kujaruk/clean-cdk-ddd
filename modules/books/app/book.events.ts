@@ -1,4 +1,0 @@
-export enum BookEvents {
-  BOOK_VERIFIED = 'BOOK_VERIFIED',
-  COMMENT_CREATED = 'COMMENT_CREATED',
-}

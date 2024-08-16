@@ -1,44 +1,39 @@
 import { IIdentifierRepository } from '@modules/common/app/src/application/contracts/identifier.contract';
-import { AppEventSources } from '@modules/event-dispatcher/app/app.event-sources';
-import { AppEvents } from '@modules/event-dispatcher/app/app.events';
-import { IEventDispatcherRepository } from '@modules/event-dispatcher/app/src/domain/contracts/event-dispatcher.contract';
-import { AppEventValueObject } from '@modules/event-dispatcher/app/src/domain/value-objects/app-event.value-object';
-import { CommentEntity } from '../../domain/entities/comment.entity';
+import { IDomainEventsRepository } from '@modules/domain-events-dispatcher/app/src/domain/contracts/domain-events.contract';
+import { CommentCretedEvent } from '@modules/domain-events-dispatcher/app/src/domain/domain-events/book/comment-created.event';
+import { Comment } from '../../domain/entities/comment.entity';
 import { CommentEntitySchema } from '../../domain/schemas/comment.schema';
 import { GenerateEntityIdService } from '../../domain/services/generate-entity-id.service';
+import { truncateText } from '../../domain/services/truncate-text.service';
 import { ICommentRepository } from '../contracts/comment.contract';
 
 export class CommentService {
   constructor(
     private readonly identifierRepository: IIdentifierRepository,
     private readonly commentRepository: ICommentRepository,
-    private readonly awsEventBridgeRepository: IEventDispatcherRepository
+    private readonly awsEventBridgeRepository: IDomainEventsRepository
   ) {}
 
-  async createComment(text: string, bookId: string) {
+  async createComment(bookId: string, content: string) {
     const identifier = this.identifierRepository.generate();
 
     const id = GenerateEntityIdService.getCommentId(identifier);
-    const comment = new CommentEntity({ id, text, bookId });
+    const summary = truncateText(content, 10, true);
+
+    const comment = new Comment({ id, bookId, content, summary });
 
     return comment;
   }
 
-  async saveComment(comment: CommentEntity) {
+  async saveComment(comment: Comment) {
     CommentEntitySchema.parse(comment);
 
     await this.commentRepository.save(comment);
   }
 
-  sendCommentCreatedEvent(id: string, bookId: string) {
-    const message = CommentEntity.getCommentCreatedEventMessage(id, bookId);
+  sendCommentCreatedEvent(comment: Comment) {
+    const eventInstance = new CommentCretedEvent(comment);
 
-    const event = new AppEventValueObject(
-      AppEventSources.BOOK_CONTEXT,
-      AppEvents.COMMENT_CREATED,
-      message
-    );
-
-    return this.awsEventBridgeRepository.sendAppEvent(event);
+    return this.awsEventBridgeRepository.sendAppEvent(eventInstance);
   }
 }

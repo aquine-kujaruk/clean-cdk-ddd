@@ -4,7 +4,7 @@ import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { Construct } from 'constructs';
 import { ControllerClassType } from '../../../src/infraestructure/controllers/base.controller';
 import { LambdaConstructType, RestApiIntegrationTargetTypes } from '../construct.types';
-import { RestApiBaseIntegration } from './integration';
+import { BaseIntegration } from './integrations/base.integration';
 
 export interface RestApiRequestIntegrationsProps {
   target: RestApiIntegrationTargetTypes;
@@ -23,6 +23,10 @@ export interface RestApiRequestLambdaIntegrationsProps extends RestApiRequestInt
   };
 }
 
+export interface RestApiRequestEventBusIntegrationsProps extends RestApiRequestIntegrationsProps {
+  eventType: string;
+}
+
 export interface RestApiIntegrationProps {
   api: RestApi;
   path: string;
@@ -31,7 +35,7 @@ export interface RestApiIntegrationProps {
 }
 
 export type RestApiAppControllersType<T extends string | number | symbol> = {
-  [key in T]?: (scope: Construct, props: RestApiIntegrationProps) => RestApiBaseIntegration;
+  [key in T]?: (scope: Construct, props: RestApiIntegrationProps) => BaseIntegration;
 };
 
 export type RestApiRouteType<T extends string | number | symbol> = {

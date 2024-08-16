@@ -1,5 +1,5 @@
 import { BookCommands } from '@modules/books/app/book.commands';
-import { BookEvents } from '@modules/books/app/book.events';
+// import { BookEvents } from '@modules/books/app/book.events';
 import { BookQueries } from '@modules/books/app/book.queries';
 import { RestApiRouteType } from '@modules/common/app/lib/construct-utils/rest-apis/rest-api.types';
 import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
@@ -16,9 +16,9 @@ export const PublicApiRoutes: RestApiRouteType<AppRequestType> = {
     [POST]: BookCommands.ADD_COMMENT,
   },
 
-  'book/event/verified-book': {
-    [POST]: BookEvents.BOOK_VERIFIED,
-  },
+  // 'book/event/verified-book': {
+  //   [POST]: BookEvents.BOOK_VERIFIED,
+  // },
 
   'book/query/get-book/{bookId}': {
     [GET]: BookQueries.GET_BOOK,
