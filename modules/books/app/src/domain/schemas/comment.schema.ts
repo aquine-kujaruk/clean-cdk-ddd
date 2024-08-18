@@ -9,7 +9,7 @@ export const CommentEntitySchema = z
     summary: z
       .string()
       .min(1, 'summary cannot be empty')
-      .max(10, 'summary cannot be longer than 10 characters'),
+      .max(30, 'summary cannot be longer than 10 characters'),
   })
   .merge(EntityTimestampsSchema);
 

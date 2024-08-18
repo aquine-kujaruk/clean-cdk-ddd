@@ -6,7 +6,7 @@ import {
   getConstructName,
   getUserResourceName,
   getUniqueConstructName,
-} from '../resource-names';
+} from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 interface RuleBuilderConstructProps extends RuleProps {}

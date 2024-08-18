@@ -1,7 +1,7 @@
 import { EventBus, EventBusProps, IEventBus } from 'aws-cdk-lib/aws-events';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getCommonResourceName, getConstructName, getUniqueConstructName } from '../resource-names';
+import { getCommonResourceName, getConstructName, getUniqueConstructName } from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 export class EventBusBuilderConstruct extends BaseBuilder<EventBusProps> {

@@ -10,7 +10,7 @@ import {
   getConstructName,
   getUserResourceName,
   getUniqueConstructName,
-} from '../resource-names';
+} from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
 

@@ -81,7 +81,6 @@ export class DomainEventsRepository implements IDomainEventsRepository {
     };
 
     try {
-      console.log('input: ', input);
       await AwsDynamoDbAdapter.upsertItem(input);
     } catch (error: any) {
       if (error.name === 'ConditionalCheckFailedException')

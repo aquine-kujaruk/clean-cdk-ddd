@@ -2,7 +2,7 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { LogGroup, LogGroupProps, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName } from '../resource-names';
+import { getConstructName } from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 export class LogGroupBuilderConstruct extends BaseBuilder<LogGroupProps> {

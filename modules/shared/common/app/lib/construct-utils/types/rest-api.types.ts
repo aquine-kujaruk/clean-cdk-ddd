@@ -3,12 +3,17 @@ import { RestApi } from 'aws-cdk-lib/aws-apigateway';
 import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { Construct } from 'constructs';
 import { ControllerClassType } from '../../../src/infraestructure/controllers/base.controller';
-import { LambdaConstructType, RestApiIntegrationTargetTypes } from '../construct.types';
-import { BaseIntegration } from './integrations/base.integration';
+import { LambdaAuthorizerBuilderConstruct } from '../builders/lambda-authorizer.builder';
+import { BaseIntegration } from '../rest-api-integrations/base.integration';
+import {
+  AuthorizerType,
+  RestApiConstructType,
+  RestApiIntegrationTargetTypes,
+} from './construct.types';
 
 export interface RestApiRequestIntegrationsProps {
   target: RestApiIntegrationTargetTypes;
-  authorizerFunction?: LambdaConstructType;
+  authorizer?: AuthorizerType;
 }
 
 export interface RestApiRequestDynamoDbIntegrationsProps extends RestApiRequestIntegrationsProps {
@@ -31,13 +36,21 @@ export interface RestApiIntegrationProps {
   api: RestApi;
   path: string;
   httpMethod: HttpMethod;
-  apiEventSource: string;
+  apiEventSource?: string;
+  authorizers: LambdaAuthorizerBuilderConstruct[];
 }
 
-export type RestApiAppControllersType<T extends string | number | symbol> = {
-  [key in T]?: (scope: Construct, props: RestApiIntegrationProps) => BaseIntegration;
+export interface RestApiEndpointDefinition {
+  path: string;
+  apis: RestApiConstructType[];
+  integration: (scope: Construct, props: RestApiIntegrationProps) => BaseIntegration;
+}
+
+export type RestApiEndpoint = Omit<RestApiEndpointDefinition, 'apis'> & {
+  method: HttpMethod;
 };
 
-export type RestApiRouteType<T extends string | number | symbol> = {
-  [key in string]: { [key in HttpMethod]?: T };
-};
+export interface CommandQueryType {
+  resource: string;
+  endpointDefinitions: RestApiEndpointDefinition[];
+}

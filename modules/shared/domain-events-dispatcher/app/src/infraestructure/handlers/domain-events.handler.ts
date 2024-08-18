@@ -1,14 +1,14 @@
 import { BatchProcessor, EventType } from '@aws-lambda-powertools/batch';
 import { EventBridgeEvent } from '@aws-lambda-powertools/parser/types';
 import {
+  BaseDomainEvent,
   DomainEventDetailType,
   HandlerConsumer,
-  BaseDomainEvent,
   IDomainEvent,
   UseCaseConsumer,
 } from '@modules/common/app/src/domain/events/base.domain-event';
 import type { Context, SQSBatchResponse, SQSEvent } from 'aws-lambda';
-import { DomainEventSources } from 'shared/domain-events-dispatcher/app/domain-event.sources';
+import { DomainEventSources } from '../../../domain-event.sources';
 import { DomainEvents } from '../../domain/domain-events';
 import { DomainEventsRepository } from '../repositories/domain-events.repository';
 

@@ -55,7 +55,6 @@ export class BookRepository implements IBookRepository {
       AwsDynamoDbAdapter.paginatedQuery(commentRelationsQuery),
     ]);
 
-    console.log('response: ', response);
     const [[book], comments] = response;
 
     return {

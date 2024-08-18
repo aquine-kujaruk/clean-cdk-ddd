@@ -1,13 +1,14 @@
 import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
-import { DynamoDbConstructType } from '@modules/common/app/lib/construct-utils/construct.types';
-import {
-  RestApiIntegrationProps,
-  RestApiRequestDynamoDbIntegrationsProps,
-} from '@modules/common/app/lib/construct-utils/rest-apis/rest-api.types';
-import { RestApiIntegrationRole } from '@modules/common/app/lib/resources/iam/roles/rest-api-integration.role';
 import { AwsIntegration, Model, PassthroughBehavior } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 import { BaseIntegration } from './base.integration';
+
+import { RestApiIntegrationRole } from '../../resources/iam/roles/rest-api-integration.role';
+import {
+  RestApiIntegrationProps,
+  RestApiRequestDynamoDbIntegrationsProps,
+} from '../types/rest-api.types';
+import { DynamoDbConstructType } from '../types/construct.types';
 
 class DynamoDbIntegration extends BaseIntegration {
   private constructor(

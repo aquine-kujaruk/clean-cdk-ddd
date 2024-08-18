@@ -1,6 +1,6 @@
 import { camelCase, pascalCase } from 'change-case-all';
 import { ulid } from 'ulidx';
-import { Configurations } from '../../../../../shared/configurations';
+import { Configurations } from '../../../../../configurations';
 
 const { APP_NAME, USER, STAGE } = Configurations.getEnvs();
 

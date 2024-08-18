@@ -1,7 +1,7 @@
 import { IRole, Role, RoleProps } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getUniqueConstructName, getCommonResourceName } from '../resource-names';
+import { getConstructName, getUniqueConstructName, getCommonResourceName } from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 interface RoleBuilderConstructProps extends RoleProps {}

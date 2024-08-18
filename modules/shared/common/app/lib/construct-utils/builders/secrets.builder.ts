@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {
   getConstructName,
   getCommonResourceName
-} from '../resource-names';
+} from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 export class SecretBuilderConstruct extends BaseBuilder<SecretProps> {

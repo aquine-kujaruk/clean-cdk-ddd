@@ -11,34 +11,39 @@ import {
   RestApiProps,
   UsagePlan,
 } from 'aws-cdk-lib/aws-apigateway';
-import { HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { Construct } from 'constructs';
 import _ from 'lodash';
 import { Configurations } from '../../../../../../shared/configurations';
-import { getConstructName, getUniqueConstructName, getUserResourceName } from '../resource-names';
+import { parseApiPath } from '../services/parse-api-path.service';
 import {
-  RestApiAppControllersType,
+  getConstructName,
+  getUniqueConstructName,
+  getUserResourceName,
+} from '../services/resource-names.service';
+import {
+  CommandQueryType,
+  RestApiEndpoint,
+  RestApiEndpointDefinition,
   RestApiIntegrationProps,
-  RestApiRouteType,
-} from '../rest-apis/rest-api.types';
+} from '../types/rest-api.types';
 import { BaseBuilder } from './base.builder';
+import { LambdaAuthorizerBuilderConstruct } from './lambda-authorizer.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
 
 const { STAGE } = Configurations.getEnvs();
 
-type RestApiBuilderConstructProps<T extends string | number | symbol> = {
-  apiRoutes: RestApiRouteType<T>;
-  appRoutes: RestApiAppControllersType<T>;
-  apiEventSource: string;
+type RestApiBuilderConstructProps = {
+  commands?: CommandQueryType[];
+  queries?: CommandQueryType[];
+  authorizers?: LambdaAuthorizerBuilderConstruct[];
+  apiEventSource?: string;
   apiKeyValue?: string;
 } & RestApiProps;
 
-export class RestApiBuilderConstruct<T extends string | number | symbol> extends BaseBuilder<
-  RestApiBuilderConstructProps<T>
-> {
+export class RestApiBuilderConstruct extends BaseBuilder<RestApiBuilderConstructProps> {
   public api: RestApi;
 
-  constructor(scope: Construct, name: string, props: RestApiBuilderConstructProps<T>) {
+  constructor(scope: Construct, name: string, props: RestApiBuilderConstructProps) {
     super(scope, name, props);
 
     this.build();
@@ -80,8 +85,13 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
     );
 
     this.createUsagePlan();
-    this.createApiRoutes(this.props.apiRoutes);
-    this.createApiRoutesMethods(this.props.apiRoutes);
+
+    const endpoints = this.getEndpoints();
+
+    for (const endpoint of endpoints) {
+      this.createEndpointUrl(endpoint);
+      this.createEndpointIntegration(endpoint);
+    }
   }
 
   private createUsagePlan() {
@@ -95,6 +105,46 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
       });
       usagePlan.addApiKey(apiKey);
     }
+  }
+
+  private getEndpoints(): RestApiEndpoint[] {
+    const { commands = [], queries = [] } = this.props;
+
+    const commandQueryList = [
+      ...commands.map((command) => ({ ...command, resource: `command/${command.resource}` })),
+      ...queries.map((query) => ({ ...query, resource: `query/${query.resource}` })),
+    ];
+
+    let endpoints = [];
+    for (const { resource, endpointDefinitions } of commandQueryList) {
+      for (const definition of endpointDefinitions) {
+        endpoints.push(this.getEndpoint(resource, definition));
+      }
+    }
+
+    return endpoints.filter(Boolean) as RestApiEndpoint[];
+  }
+
+  private getEndpoint(
+    resource: string,
+    { apis, path, integration }: RestApiEndpointDefinition
+  ): RestApiEndpoint | undefined {
+    const isApiRegistered = !!apis.find((api) => api.name === this.name);
+
+    if (!isApiRegistered) return;
+
+    const parsedPath = parseApiPath(path);
+
+    return {
+      path: `${resource}${parsedPath.path}`,
+      method: parsedPath.method,
+      integration,
+    };
+  }
+
+  private createEndpointUrl({ path }: RestApiEndpoint) {
+    const segment = path.split('/').filter((part) => part);
+    this.addRoute(this.api.root, segment);
   }
 
   private addRoute(
@@ -111,31 +161,15 @@ export class RestApiBuilderConstruct<T extends string | number | symbol> extends
     return this.addRoute(resource, parts, index + 1);
   }
 
-  private createApiRoutes(routes: RestApiRouteType<T>) {
-    const paths = Object.keys(routes);
+  private createEndpointIntegration(endpoint: RestApiEndpoint) {
+    const restApiIntegrationProps: RestApiIntegrationProps = {
+      api: this.api,
+      path: endpoint.path,
+      httpMethod: endpoint.method,
+      apiEventSource: this.props.apiEventSource || 'REST_API',
+      authorizers: this.props.authorizers || [],
+    };
 
-    for (const path of paths) {
-      const segment = path.split('/').filter((part) => part);
-      this.addRoute(this.api.root, segment);
-    }
-  }
-
-  private createApiRoutesMethods(routes: RestApiRouteType<T>) {
-    for (const path in routes) {
-      for (const method in routes[path]) {
-        const restApiIntegrationProps: RestApiIntegrationProps = {
-          api: this.api,
-          path,
-          httpMethod: method as HttpMethod,
-          apiEventSource: this.props.apiEventSource,
-        };
-
-        const request = (routes as any)[path]?.[method];
-
-        if (!request) continue;
-
-        (this.props.appRoutes as any)[request]?.(this, restApiIntegrationProps);
-      }
-    }
+    endpoint.integration(this, restApiIntegrationProps);
   }
 }

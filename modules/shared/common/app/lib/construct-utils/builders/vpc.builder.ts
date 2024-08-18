@@ -5,7 +5,7 @@ import {
   getConstructName,
   getCommonResourceName,
   getUniqueConstructName,
-} from '../resource-names';
+} from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 import { CfnOutput } from 'aws-cdk-lib';
 

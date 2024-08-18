@@ -1,10 +1,10 @@
-import { LambdaConstructType } from '@modules/common/app/lib/construct-utils/construct.types';
+import { LambdaIntegration, Model, PassthroughBehavior } from 'aws-cdk-lib/aws-apigateway';
+import { Construct } from 'constructs';
+import { LambdaConstructType } from '../types/construct.types';
 import {
   RestApiIntegrationProps,
   RestApiRequestLambdaIntegrationsProps,
-} from '@modules/common/app/lib/construct-utils/rest-apis/rest-api.types';
-import { LambdaIntegration, Model, PassthroughBehavior } from 'aws-cdk-lib/aws-apigateway';
-import { Construct } from 'constructs';
+} from '../types/rest-api.types';
 import { BaseIntegration } from './base.integration';
 
 class LambdaFunctionIntegration extends BaseIntegration {

@@ -3,7 +3,7 @@ import { IVpc } from 'aws-cdk-lib/aws-ec2';
 import { Cluster, ClusterProps, ICluster } from 'aws-cdk-lib/aws-ecs';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getCommonResourceName } from '../resource-names';
+import { getConstructName, getCommonResourceName } from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 export class EcsClusterBuilderConstruct extends BaseBuilder<ClusterProps> {

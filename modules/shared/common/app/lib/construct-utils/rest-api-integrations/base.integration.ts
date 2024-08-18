@@ -1,23 +1,13 @@
 import {
-  getConstructName,
-  getUserResourceName,
-} from '@modules/common/app/lib/construct-utils/resource-names';
-import {
-  RestApiIntegrationProps,
-  RestApiRequestIntegrationsProps,
-} from '@modules/common/app/lib/construct-utils/rest-apis/rest-api.types';
-import { Duration } from 'aws-cdk-lib';
-import {
   AuthorizationType,
   AwsIntegration,
   IResource,
-  IdentitySource,
   MethodOptions,
-  RequestAuthorizer,
 } from 'aws-cdk-lib/aws-apigateway';
 import { IFunction } from 'aws-cdk-lib/aws-lambda';
 import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
+import { RestApiIntegrationProps, RestApiRequestIntegrationsProps } from '../types/rest-api.types';
 
 export abstract class BaseIntegration {
   handler: IStateMachine | IFunction;
@@ -36,17 +26,21 @@ export abstract class BaseIntegration {
       else apiResource = this.props.api.root.getResource(resourceString);
     }
 
-    if (this.props.authorizerFunction) {
-      const handler = (this.props.authorizerFunction as any).getImportedResource(this.scope);
+    if (this.props.authorizer) {
+      if (!this.props.authorizers) {
+        throw new Error(
+          `Authorizers param must be provided to ${this.props.api.node.id} to use authorizer`
+        );
+      }
 
-      const authorizerName = `${this.props.authorizerFunction.name}Authorizer`;
+      const { authorizer } =
+        this.props.authorizers.find((auth) => {
+          return auth.name === this.props.authorizer?.name;
+        }) || {};
 
-      const authorizer = new RequestAuthorizer(this.scope, getConstructName(authorizerName), {
-        authorizerName: getUserResourceName(authorizerName),
-        handler,
-        identitySources: [IdentitySource.header('authorization')],
-        resultsCacheTtl: Duration.seconds(0),
-      });
+      if (!authorizer) {
+        throw new Error(`Authorizer ${this.props.authorizer?.name} not found in authorizers list`);
+      }
 
       options = {
         ...options,

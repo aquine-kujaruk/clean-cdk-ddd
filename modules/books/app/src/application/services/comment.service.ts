@@ -18,7 +18,7 @@ export class CommentService {
     const identifier = this.identifierRepository.generate();
 
     const id = GenerateEntityIdService.getCommentId(identifier);
-    const summary = truncateText(content, 10, true);
+    const summary = truncateText(content, 30, true);
 
     const comment = new Comment({ id, bookId, content, summary });
 

@@ -15,7 +15,7 @@ import {
   getConstructName,
   getUserResourceName,
   getUniqueConstructName,
-} from '../resource-names';
+} from '../services/resource-names.service';
 import { LambdaInvokeTask } from '../sfn-custom-tasks/lambda-invoke.task';
 import { BaseBuilder } from './base.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';

@@ -1,14 +1,13 @@
-import { NodejsFunctionBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/nodejs-function.builder';
-import { Function } from 'aws-cdk-lib/aws-lambda';
+import { LambdaAuthorizerBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/lambda-authorizer.builder';
+import { IdentitySource } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
-import path from 'path';
+import { SimpleAuthorizerLambda } from '../lambda-functions/simple-authorizer.lambda';
 
-export class SimpleAuthorizer extends NodejsFunctionBuilderConstruct {
-  public readonly handler?: Function;
-
+export class SimpleAuthorizer extends LambdaAuthorizerBuilderConstruct {
   constructor(scope: Construct) {
     super(scope, SimpleAuthorizer.name, {
-      entry: path.resolve(__dirname, '../../src/infraestructure/handlers/simple-authorizer.handler.ts'),
+      handler: SimpleAuthorizerLambda.getImportedResource(scope),
+      identitySources: [IdentitySource.header('authorization')],
     });
   }
 }

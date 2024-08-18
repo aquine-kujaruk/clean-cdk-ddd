@@ -3,7 +3,7 @@ import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-node
 import { Construct } from 'constructs';
 import _ from 'lodash';
 import { LambdaRole } from '../../resources/iam/roles/lambda.role';
-import { getConstructName, getUserResourceName } from '../resource-names';
+import { getConstructName, getUserResourceName } from '../services/resource-names.service';
 import { LambdaBuilderConstruct } from './lambda.builder';
 import { LogGroupBuilderConstruct } from './log-group.builder';
 

@@ -1,11 +1,11 @@
-import { EventBusConstructType } from '@modules/common/app/lib/construct-utils/construct.types';
-import {
-  RestApiIntegrationProps,
-  RestApiRequestEventBusIntegrationsProps
-} from '@modules/common/app/lib/construct-utils/rest-apis/rest-api.types';
-import { RestApiIntegrationRole } from '@modules/common/app/lib/resources/iam/roles/rest-api-integration.role';
 import { AwsIntegration, Model } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
+import { RestApiIntegrationRole } from '../../resources/iam/roles/rest-api-integration.role';
+import { EventBusConstructType } from '../types/construct.types';
+import {
+  RestApiIntegrationProps,
+  RestApiRequestEventBusIntegrationsProps,
+} from '../types/rest-api.types';
 import { BaseIntegration } from './base.integration';
 
 class EventBusIntegration extends BaseIntegration {
@@ -67,7 +67,9 @@ class EventBusIntegration extends BaseIntegration {
     });
   }
 
-  static setup(requestProps: RestApiRequestEventBusIntegrationsProps & { target: EventBusConstructType }) {
+  static setup(
+    requestProps: RestApiRequestEventBusIntegrationsProps & { target: EventBusConstructType }
+  ) {
     return (scope: Construct, props: RestApiIntegrationProps) =>
       new EventBusIntegration(scope, { ...props, ...requestProps });
   }

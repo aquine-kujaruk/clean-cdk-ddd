@@ -1,10 +1,7 @@
-import { StateMachineConstructType } from '@modules/common/app/lib/construct-utils/construct.types';
-import {
-  RestApiIntegrationProps,
-  RestApiRequestIntegrationsProps,
-} from '@modules/common/app/lib/construct-utils/rest-apis/rest-api.types';
 import { StepFunctionsIntegration } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
+import { StateMachineConstructType } from '../types/construct.types';
+import { RestApiIntegrationProps, RestApiRequestIntegrationsProps } from '../types/rest-api.types';
 import { BaseIntegration } from './base.integration';
 
 class StateMachineIntegration extends BaseIntegration {

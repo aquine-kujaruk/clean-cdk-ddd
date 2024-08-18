@@ -8,7 +8,7 @@ import { Configurations } from '../../../../../configurations';
 const { npm_config_argv } = Configurations.getEnvs();
 
 export abstract class BaseBuilder<T> extends Construct {
-  constructor(scope: Construct, protected readonly name: string, protected readonly props: T) {
+  constructor(scope: Construct, public readonly name: string, protected readonly props: T) {
     super(scope, name);
   }
 

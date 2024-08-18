@@ -3,8 +3,11 @@
   "version": "1.0.1",
   "private": true,
   "workspaces": [
-    "modules/books",
-    "modules/shared/*"
+    "modules/shared/common",
+    "modules/shared/apis",
+    "modules/shared/domain-events-dispatcher",
+    "modules/shared/back-office",
+    "modules/books"
   ],
   "scripts": {
     "build": "tsc",
@@ -12,11 +15,11 @@
     "test": "jest",
     "aws:config": "aws configure sso --profile cdk-prisa-dev",
     "aws:login": "aws sso login --profile cdk-prisa-dev",
-    "synth": "node scripts/run-cdk-command.js",
-    "deploy": "node scripts/run-cdk-command.js",
-    "destroy": "node scripts/run-cdk-command.js",
-    "hotswap": "node scripts/run-cdk-command.js",
-    "generate:dist": "node scripts/run-cdk-command.js"
+    "synth": "node scripts/run-cdk-command.script.js",
+    "deploy": "node scripts/run-cdk-command.script.js",
+    "destroy": "node scripts/run-cdk-command.script.js",
+    "hotswap": "node scripts/run-cdk-command.script.js",
+    "generate:dist:all": "node scripts/generate-dist.script.js"
   },
   "devDependencies": {
     "@aws-cdk-containers/ecs-service-extensions": "^2.0.1-alpha.393",

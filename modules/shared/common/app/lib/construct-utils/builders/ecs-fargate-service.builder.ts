@@ -7,7 +7,7 @@ import {
 import { Construct } from 'constructs';
 import _ from 'lodash';
 import { EcsTaskRole } from '../../resources/iam/roles/ecs-task.role';
-import { getConstructName, getCommonResourceName } from '../resource-names';
+import { getConstructName, getCommonResourceName } from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 export class EcsFargateServiceBuilderConstruct extends BaseBuilder<ApplicationLoadBalancedFargateServiceProps> {

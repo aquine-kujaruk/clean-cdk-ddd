@@ -2,7 +2,7 @@ import { Stack } from 'aws-cdk-lib';
 import { IQueue, Queue, QueueProps } from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getUserResourceName, getUniqueConstructName } from '../resource-names';
+import { getConstructName, getUserResourceName, getUniqueConstructName } from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 export class QueueBuilderConstruct extends BaseBuilder<QueueProps> {

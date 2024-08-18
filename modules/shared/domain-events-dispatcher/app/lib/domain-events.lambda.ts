@@ -1,7 +1,7 @@
 import { BookLambda } from '@modules/books/app/lib/book.lambda';
 import { CreateBookStateMachine } from '@modules/books/app/lib/state-machines/create-book.state-machine';
 import { NodejsFunctionBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/nodejs-function.builder';
-import { getConstructName } from '@modules/common/app/lib/construct-utils/resource-names';
+import { getConstructName } from '@modules/common/app/lib/construct-utils/services/resource-names.service';
 import { EventStoreTable } from '@modules/common/app/lib/resources/databases/dynamo-db/event-store.table';
 import { Duration } from 'aws-cdk-lib';
 import { EventSourceMapping, Function } from 'aws-cdk-lib/aws-lambda';
@@ -20,21 +20,17 @@ export class DomainEventsLambda extends NodejsFunctionBuilderConstruct {
         CREATE_BOOK_USE_CASE: CreateBookStateMachine.getArn(scope),
         BOOK_HANDLER: BookLambda.resourceName,
       },
-      timeout: Duration.seconds(30)
+      timeout: Duration.seconds(30),
     });
 
     if (this.handler) {
-      new EventSourceMapping(
-        this,
-        getConstructName(`${DomainEventsLambda.name}Target`),
-        {
-          eventSourceArn: DomainEventsQueue.getArn(this),
-          target: this.handler,
-          batchSize: 10,
-          reportBatchItemFailures: true,
-          maxConcurrency: 10,
-        }
-      );
+      new EventSourceMapping(this, getConstructName(`${DomainEventsLambda.name}Target`), {
+        eventSourceArn: DomainEventsQueue.getArn(this),
+        target: this.handler,
+        batchSize: 10,
+        reportBatchItemFailures: true,
+        maxConcurrency: 10,
+      });
     }
   }
 }

@@ -21,8 +21,11 @@
     "esModuleInterop": true,
     "baseUrl": "./modules",
     "paths": {
-      "@modules/books": ["modules/books/*"],
-      "@modules/shared/*": ["modules/shared/*"]
+      "@modules/common/*": ["modules/shared/common/*"],
+      "@modules/apis/*": ["modules/shared/apis/*"],
+      "@modules/domain-events-dispatcher/*": ["modules/shared/domain-events-dispatcher/*"],
+      "@modules/back-office/*": ["modules/shared/back-office/*"],
+      "@modules/books": ["modules/books/*"]
     },
     "typeRoots": ["./node_modules/@types"]
   },
