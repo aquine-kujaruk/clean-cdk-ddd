@@ -1,7 +1,7 @@
 import {
   HandlerProps,
   ControllerRouter,
-} from '@modules/common/app/src/infraestructure/lambda-handler.router';
+} from '@modules/common/app/src/infraestructure/handlers/lambda-handler.router';
 import { BookController } from '../controllers/book.controller';
 import { CommentController } from '../controllers/comment.controller';
 

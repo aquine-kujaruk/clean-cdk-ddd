@@ -44,7 +44,6 @@ export const BookQueries: CommandQueryType = {
       apis: [PublicApi],
       integration: LambdaFunctionIntegration({
         target: BookLambda,
-        // authorizerFunction: ApiAuthorizersInfraestructureLambda,
         handlerProps: {
           controller: BookController,
           methodName: BookController.getBookWithComments.name,

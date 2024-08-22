@@ -9,11 +9,8 @@ interface LambdaInvokeTaskProps extends Omit<LambdaInvokeProps, 'payload'> {
     controller: ControllerClassType;
     methodName: string;
     input?: Record<string, any>;
-    initializeContext?: boolean;
-    context?: {
-      execution: Record<never, never>;
-      previousStep: Record<never, never>;
-    };
+    initializeContext?: boolean; // La primera task de un parallel o map debe inicializar el contexto
+    context?: Record<never, never>;
   };
 }
 
@@ -27,10 +24,7 @@ export class LambdaInvokeTask extends LambdaInvoke {
       );
 
     let payload = {
-      context: {
-        execution: JsonPath.objectAt('$.context.execution'),
-        previousStep: JsonPath.objectAt('$.context.previousStep'),
-      },
+      context: JsonPath.objectAt('$.context'),
       stateName: JsonPath.stateName,
       ...props.payload,
       controller: props.payload.controller.name,
@@ -38,37 +32,37 @@ export class LambdaInvokeTask extends LambdaInvoke {
 
     if (props.payload.initializeContext) {
       const { context, ...rest } = payload;
-      payload = {
-        ...rest,
-        context: { execution: {}, previousStep: {} },
-      };
+      payload = { ...rest, context: {} };
+    }
+
+    // Se revisa el input por que se supone que viene vacío luego de un map o un parallel
+    if (!props.payload.initializeContext && !payload.input) {
+      const { context, input, ...rest } = payload;
+      payload = { ...rest, context: {}, input: JsonPath.objectAt('$') };
     }
 
     super(scope, id, {
       retryOnServiceExceptions: false,
       ...props,
-      payload: TaskInput.fromObject(payload),
+      payload: TaskInput.fromObject(payload)
     });
   }
 
-  public static readonly previousStepInput = '$.context.previousStep.input';
-  public static readonly previousStepOutput = '$.context.previousStep.output';
-
-  private static executionStep(
+  private static contextStep(
     stepName: string,
     path: string | undefined,
     paramType: 'input' | 'output'
   ) {
     const step = camelCase(stepName);
 
-    if (!path) return `$.context.execution.${step}.${paramType}`;
+    if (!path) return `$.context.${step}.${paramType}`;
 
-    return `$.context.execution.${step}.${paramType}.${path}`;
+    return `$.context.${step}.${paramType}.${path}`;
   }
 
-  public static executionStepInput = (stepName: string, path?: string) =>
-    LambdaInvokeTask.executionStep(stepName, path, 'input');
+  public static getInputPath = (stepName: string, path?: string) =>
+    LambdaInvokeTask.contextStep(stepName, path, 'input');
 
-  public static executionStepOutput = (stepName: string, path?: string) =>
-    LambdaInvokeTask.executionStep(stepName, path, 'output');
+  public static getOutputPath = (stepName: string, path?: string) =>
+    LambdaInvokeTask.contextStep(stepName, path, 'output');
 }

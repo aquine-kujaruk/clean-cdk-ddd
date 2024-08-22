@@ -2,7 +2,7 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { Bucket, BucketProps } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import _ from 'lodash';
-import { getConstructName, getCommonResourceName } from '../services/resource-names.service';
+import { getCommonResourceName, getConstructName } from '../services/resource-names.service';
 import { BaseBuilder } from './base.builder';
 
 export class BucketBuilderConstruct extends BaseBuilder<BucketProps> {

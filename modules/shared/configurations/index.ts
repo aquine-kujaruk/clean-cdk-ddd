@@ -30,7 +30,7 @@ export class Configurations {
     const tags = [
       { key: 'appName', value: Configurations.getEnvs()?.APP_NAME as string },
       { key: 'environment', value: Configurations.getEnvs()?.STAGE as string },
-      { key: 'book', value: Configurations.getEnvs()?.USER as string },
+      { key: 'user', value: Configurations.getEnvs()?.USER as string },
       { key: 'Medio', value: 'El País' },
       { key: 'Pais', value: 'ES' },
       { key: 'Owner', value: 'aabalo@prisanoticias.com' },

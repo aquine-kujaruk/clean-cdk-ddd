@@ -4,6 +4,7 @@ import { DynamoDb } from './resources/databases';
 import { Ecs } from './resources/ecs';
 import { EventBridge } from './resources/event-bridge';
 import { Roles } from './resources/iam';
+import { LambdaFunctions } from './resources/lambda-functions';
 import { Vpcs } from './resources/networking';
 import { Secrets } from './resources/security';
 import { Buckets } from './resources/storages';
@@ -19,5 +20,6 @@ export class CommonStack extends Stack {
     new Vpcs(this);
     new Ecs(this);
     new EventBridge(this);
+    new LambdaFunctions(this);
   }
 }

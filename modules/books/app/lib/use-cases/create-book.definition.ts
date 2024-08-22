@@ -6,6 +6,8 @@ import { Construct } from 'constructs';
 import { BookController } from '../../src/infraestructure/controllers/book.controller';
 import { BookLambda } from '../book.lambda';
 
+const { getOutputPath } = LambdaInvokeTask;
+
 enum Steps {
   CREATE_BOOK = 'Create Book Object',
   SAVE_BOOK = 'Save Book in Database',
@@ -49,10 +51,10 @@ export class CreateBookDefinition extends ChainableSfnDefinition {
       payload: {
         controller: BookController,
         methodName: BookController.saveBook.name,
-        input: JsonPath.objectAt(LambdaInvokeTask.previousStepOutput),
+        input: JsonPath.objectAt(getOutputPath(Steps.CREATE_BOOK)),
       },
       resultSelector: {
-        bookId: JsonPath.stringAt(LambdaInvokeTask.executionStepOutput(Steps.CREATE_BOOK, 'id')),
+        bookId: JsonPath.stringAt(getOutputPath(Steps.CREATE_BOOK, 'id')),
       },
     }).addCatch(this.fail);
   }
