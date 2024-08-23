@@ -1,5 +1,5 @@
-import { LogGroupBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/log-group.builder';
-import { RuleBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/rule.builder';
+import { LogGroupConstruct } from '@modules/common/app/lib/constructs/cloud-watch/log-group.construct';
+import { RuleConstruct } from '@modules/common/app/lib/constructs/event-bridge/rule.construct';
 import { DomainEventsBus } from '@modules/common/app/lib/resources/event-bridge/busses/domain-events.bus';
 import { IDomainEvent } from '@modules/common/app/src/domain/events/base.domain-event';
 import { CloudWatchLogGroup, SqsQueue } from 'aws-cdk-lib/aws-events-targets';
@@ -8,7 +8,7 @@ import { RulesProps } from '.';
 import { DomainEventSources } from '../../domain-event.sources';
 import { DomainEvents } from '../../src/domain/domain-events';
 
-export class DomainEventsRule extends RuleBuilderConstruct {
+export class DomainEventsRule extends RuleConstruct {
   constructor(scope: Construct, props: RulesProps) {
     const detailTypes = DomainEvents.map(
       (event: IDomainEvent<DomainEventSources>) => (event as any).type
@@ -25,10 +25,7 @@ export class DomainEventsRule extends RuleBuilderConstruct {
   }
 
   private static getTargets = (scope: Construct, props: RulesProps) => {
-    const { logGroup } = new LogGroupBuilderConstruct(
-      scope,
-      `/aws/events/${DomainEventsRule.name}`
-    );
+    const { logGroup } = new LogGroupConstruct(scope, `/aws/events/${DomainEventsRule.name}`);
 
     return [new SqsQueue(props.queue), new CloudWatchLogGroup(logGroup)];
   };

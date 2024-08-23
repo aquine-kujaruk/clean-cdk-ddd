@@ -7,12 +7,12 @@ import { CommentRepository } from '../repositories/comment.repository';
 
 const identifierRepository = new IdentifierRepository();
 const commentRepository = new CommentRepository();
-const awsEventBridgeRepository = new DomainEventsRepository();
+const domainEventsRepository = new DomainEventsRepository();
 
 const commentService = new CommentService(
   identifierRepository,
   commentRepository,
-  awsEventBridgeRepository
+  domainEventsRepository
 );
 
 export class CommentController extends BaseController {

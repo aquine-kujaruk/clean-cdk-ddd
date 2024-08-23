@@ -7,5 +7,5 @@
   "include": [
     "app/**/*",
     "bin/app.ts"
-  ]
+, "../apis/app/lib/authorizers/simple.authorizer.ts"  ]
 }

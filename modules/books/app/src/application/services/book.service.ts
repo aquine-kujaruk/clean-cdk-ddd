@@ -1,8 +1,7 @@
 import { IIdentifierRepository } from '@modules/common/app/src/application/contracts/identifier.contract';
 import { Book } from '../../domain/entities/book.entity';
 import { BookEntitySchema } from '../../domain/schemas/book.schema';
-import { GenerateEntityIdService } from '../../domain/services/generate-entity-id.service';
-import { IBookRepository } from '../contracts/book.contract';
+import { BookWithComments, IBookRepository } from '../contracts/book.contract';
 
 export class BookService {
   constructor(
@@ -10,26 +9,23 @@ export class BookService {
     private readonly bookRepository: IBookRepository
   ) {}
 
-  async createBook(name: string) {
+  createBook(name: string): Book {
     const identifier = this.identifierRepository.generate();
 
-    const id = GenerateEntityIdService.getBookId(identifier);
-    const book = new Book({ id, name });
-
-    return book;
+    return Book.create(identifier, { name });
   }
 
-  async saveBook(book: Book) {
+  async saveBook(book: Book): Promise<void> {
     BookEntitySchema.parse(book);
 
     await this.bookRepository.save(book);
   }
 
-  async getBookWithComments(bookId: string) {
+  async getBookWithComments(bookId: string): Promise<BookWithComments> {
     return this.bookRepository.getBookWithComments(bookId);
   }
 
-  async incrementCommentsCounter(bookId: string) {
-    return this.bookRepository.incrementCommentsCounter(bookId);
+  async incrementCommentsCounter(bookId: string): Promise<void> {
+    await this.bookRepository.incrementCommentsCounter(bookId);
   }
 }

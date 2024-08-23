@@ -12,29 +12,25 @@ const bookService = new BookService(identifierRepository, bookRepository);
 export class BookController extends BaseController {
   static async createBook(input: any) {
     const name = input?.name;
-    const response = await bookService.createBook(name);
 
-    return response;
+    return bookService.createBook(name);
   }
 
   static async saveBook(input: any) {
     const book = new Book(input);
-    const response = await bookService.saveBook(book);
 
-    return response;
+    return bookService.saveBook(book);
   }
 
   static async getBookWithComments(input: any) {
     const id = input?.path?.bookId;
-    const response = await bookService.getBookWithComments(id);
 
-    return response;
+    return bookService.getBookWithComments(id);
   }
 
   static async incrementCommentsCounter(input: any) {
     const bookId = input?.bookId;
-    const response = await bookService.incrementCommentsCounter(bookId);
 
-    return response;
+    return bookService.incrementCommentsCounter(bookId);
   }
 }

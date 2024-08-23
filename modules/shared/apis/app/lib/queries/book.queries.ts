@@ -4,9 +4,9 @@ import { BookController } from '@modules/books/app/src/infraestructure/controlle
 import {
   DynamoDbIntegration,
   LambdaFunctionIntegration,
-} from '@modules/common/app/lib/construct-utils/rest-api-integrations';
-import { CommandQueryType } from '@modules/common/app/lib/construct-utils/types/rest-api.types';
-import { BookTable } from '@modules/common/app/lib/resources/databases/dynamo-db/book.table';
+} from '@modules/common/app/lib/constructs/api-gateway/integrations/';
+import { CommandQueryType } from '@modules/common/app/lib/constructs/api-gateway/rest-api.types';
+import { BookTable } from '@modules/common/app/lib/resources/dynamo-db/tables/book.table';
 import { PublicApi } from '../apis/public.api';
 
 export const BookQueries: CommandQueryType = {

@@ -1,7 +1,7 @@
-import { EcsFargateServiceBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/ecs-fargate-service.builder';
+import { FargateServiceConstruct } from '@modules/common/app/lib/constructs/ecs/fargate-service.construct';
 import { BackOfficeCluster } from '@modules/common/app/lib/resources/ecs/clusters/back-office.cluster';
-import { CoreVpc } from '@modules/common/app/lib/resources/networking/vpcs/core.vpc';
-import { BackOfficeBucket } from '@modules/common/app/lib/resources/storages/buckets/back-office.bucket';
+import { BackOfficeBucket } from '@modules/common/app/lib/resources/s3/buckets/back-office.bucket';
+import { CoreVpc } from '@modules/common/app/lib/resources/vpc/vpcs/core.vpc';
 import { aws_ecs, Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import dotenv from 'dotenv';
@@ -9,7 +9,7 @@ import path from 'path';
 
 const environment: any = dotenv.config({ path: path.join(__dirname, '../src/.env') })?.parsed;
 
-export class BackOfficeEcsFargate extends EcsFargateServiceBuilderConstruct {
+export class BackOfficeEcsFargate extends FargateServiceConstruct {
   constructor(scope: Construct) {
     const containerPort = environment.CONTAINER_PORT
       ? parseInt(environment.CONTAINER_PORT, 10)

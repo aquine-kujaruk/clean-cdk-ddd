@@ -1,16 +1,16 @@
-import { NodejsFunctionBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/nodejs-function.builder';
-import { BookTable } from '@modules/common/app/lib/resources/databases/dynamo-db/book.table';
+import { NodejsFunctionConstruct } from '@modules/common/app/lib/constructs/lambda/nodejs-function.construct';
 import { DomainEventsBus } from '@modules/common/app/lib/resources/event-bridge/busses/domain-events.bus';
 import { Duration } from 'aws-cdk-lib';
 import { Function } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import path from 'path';
+import { BookTable } from '@modules/common/app/lib/resources/dynamo-db/tables/book.table';
 
 interface BookLambdaProps {
   environment?: Record<string, string>;
 }
 
-export class BookLambda extends NodejsFunctionBuilderConstruct {
+export class BookLambda extends NodejsFunctionConstruct {
   public readonly handler?: Function;
 
   constructor(scope: Construct, props: BookLambdaProps) {

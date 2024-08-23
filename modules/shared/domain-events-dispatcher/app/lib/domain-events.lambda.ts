@@ -1,15 +1,15 @@
 import { BookLambda } from '@modules/books/app/lib/book.lambda';
 import { CreateBookStateMachine } from '@modules/books/app/lib/state-machines/create-book.state-machine';
-import { NodejsFunctionBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/nodejs-function.builder';
-import { getConstructName } from '@modules/common/app/lib/construct-utils/services/resource-names.service';
-import { EventStoreTable } from '@modules/common/app/lib/resources/databases/dynamo-db/event-store.table';
+import { NodejsFunctionConstruct } from '@modules/common/app/lib/constructs/lambda/nodejs-function.construct';
+import { getConstructName } from '@modules/common/app/lib/constructs/resource-names.util';
+import { EventStoreTable } from '@modules/common/app/lib/resources/dynamo-db/tables/event-store.table';
 import { Duration } from 'aws-cdk-lib';
 import { EventSourceMapping, Function } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import path from 'path';
 import { DomainEventsQueue } from './domain-events.queue';
 
-export class DomainEventsLambda extends NodejsFunctionBuilderConstruct {
+export class DomainEventsLambda extends NodejsFunctionConstruct {
   public readonly handler?: Function;
 
   constructor(scope: Construct) {

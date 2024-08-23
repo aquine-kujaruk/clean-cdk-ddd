@@ -1,8 +1,8 @@
-import { QueueBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/queue.builder';
+import { QueueConstruct } from '@modules/common/app/lib/constructs/sqs/queue.construct';
 import { Duration } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
-class DlqDomainEventsQueue extends QueueBuilderConstruct {
+class DlqDomainEventsQueue extends QueueConstruct {
   constructor(scope: Construct) {
     super(scope, DlqDomainEventsQueue.name, {
       retentionPeriod: Duration.days(14),
@@ -10,7 +10,7 @@ class DlqDomainEventsQueue extends QueueBuilderConstruct {
   }
 }
 
-export class DomainEventsQueue extends QueueBuilderConstruct {
+export class DomainEventsQueue extends QueueConstruct {
   constructor(scope: Construct) {
     const dlQueue = new DlqDomainEventsQueue(scope).queue;
 

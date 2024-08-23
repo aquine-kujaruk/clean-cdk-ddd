@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
-import { EventBusBuilderConstruct } from '../../../construct-utils/builders/event-bus.builder';
+import { EventBusConstruct } from '../../../constructs/event-bridge/event-bus.construct';
 
-export class DomainEventsBus extends EventBusBuilderConstruct {
+export class DomainEventsBus extends EventBusConstruct {
   constructor(scope: Construct) {
     super(scope, DomainEventsBus.name, {});
   }

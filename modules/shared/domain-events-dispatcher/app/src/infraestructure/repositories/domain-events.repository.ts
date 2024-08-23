@@ -12,7 +12,7 @@ import { AwsStepFunctionAdapter } from '@modules/common/app/src/infraestructure/
 import { DateRepository } from '@modules/common/app/src/infraestructure/repositories/date.repository';
 import { constantCase } from 'change-case-all';
 import { DomainEventSources } from '../../../domain-event.sources';
-import { IDomainEventsRepository } from '../../domain/contracts/domain-events.contract';
+import { IDomainEventsRepository } from '../../application/contracts/domain-events.contract';
 import { AwsEventBridgeAdapter } from '../adapters/aws-event-bridge.adapter';
 
 const dateRepository = new DateRepository();

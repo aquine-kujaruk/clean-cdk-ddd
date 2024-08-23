@@ -1,12 +1,12 @@
-import { LogGroupBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/log-group.builder';
-import { RuleBuilderConstruct } from '@modules/common/app/lib/construct-utils/builders/rule.builder';
+import { LogGroupConstruct } from '@modules/common/app/lib/constructs/cloud-watch/log-group.construct';
+import { RuleConstruct } from '@modules/common/app/lib/constructs/event-bridge/rule.construct';
 import { Duration } from 'aws-cdk-lib';
 import { Schedule } from 'aws-cdk-lib/aws-events';
 import { CloudWatchLogGroup, SqsQueue } from 'aws-cdk-lib/aws-events-targets';
 import { Construct } from 'constructs';
 import { RulesProps } from '.';
 
-export class Every12HoursSchedulerRule extends RuleBuilderConstruct {
+export class Every12HoursSchedulerRule extends RuleConstruct {
   constructor(scope: Construct, props: RulesProps) {
     super(scope, Every12HoursSchedulerRule.name, {
       schedule: Schedule.rate(Duration.hours(12)),
@@ -15,7 +15,7 @@ export class Every12HoursSchedulerRule extends RuleBuilderConstruct {
   }
 
   private static getTargets = (scope: Construct, props: RulesProps) => {
-    const { logGroup } = new LogGroupBuilderConstruct(
+    const { logGroup } = new LogGroupConstruct(
       scope,
       `/aws/events/${Every12HoursSchedulerRule.name}`
     );

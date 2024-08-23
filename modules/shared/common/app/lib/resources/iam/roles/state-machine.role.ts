@@ -1,8 +1,8 @@
-import { RoleBuilderConstruct } from '../../../construct-utils/builders/role.builder';
+import { RoleConstruct } from '../../../constructs/iam/role.construct';
 import { Effect, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
-export class StateMachineRole extends RoleBuilderConstruct {
+export class StateMachineRole extends RoleConstruct {
   constructor(scope: Construct) {
     super(scope, StateMachineRole.name, {
       assumedBy: new ServicePrincipal('states.amazonaws.com'),

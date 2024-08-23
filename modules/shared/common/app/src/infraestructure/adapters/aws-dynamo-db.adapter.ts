@@ -20,6 +20,7 @@ import {
   UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
 import { NativeAttributeValue, unmarshall } from '@aws-sdk/util-dynamodb';
+import { pascalCase } from 'change-case-all';
 import { EntityClassType } from '../../domain/entities/base.entity';
 import { DateRepository } from '../repositories/date.repository';
 
@@ -121,7 +122,7 @@ export class AwsDynamoDbAdapter {
       ...input,
       Item: {
         ...input.Item,
-        ENTITIES: input.Item.ENTITIES.map(({ name }) => name).join('|'),
+        ENTITIES: input.Item.ENTITIES.map(({ name }) => pascalCase(name)).join('|'),
         updatedAtUTC: timestamp,
         createdAtUTC: timestamp,
       },

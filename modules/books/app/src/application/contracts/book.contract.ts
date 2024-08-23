@@ -4,7 +4,7 @@ import { CommentProps } from '../../domain/schemas/comment.schema';
 
 export type BookComment = Pick<CommentProps, 'summary'> & { commentId: string };
 
-type BookWithComments = BookProps & {
+export type BookWithComments = BookProps & {
   comments: BookComment[];
 };
 

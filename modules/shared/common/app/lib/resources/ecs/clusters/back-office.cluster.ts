@@ -1,8 +1,8 @@
 import { Construct } from 'constructs';
-import { EcsClusterBuilderConstruct } from '../../../construct-utils/builders/ecs-cluster.builder';
-import { CoreVpc } from '../../networking/vpcs/core.vpc';
+import { ClusterConstruct } from '../../../constructs/ecs/cluster.construct';
+import { CoreVpc } from '../../vpc/vpcs/core.vpc';
 
-export class BackOfficeCluster extends EcsClusterBuilderConstruct {
+export class BackOfficeCluster extends ClusterConstruct {
   constructor(scope: Construct) {
     super(scope, BackOfficeCluster.name, {
       vpc: CoreVpc.getImportedResource(scope),
