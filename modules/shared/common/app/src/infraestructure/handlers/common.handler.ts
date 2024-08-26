@@ -1,9 +1,10 @@
-import { ControllerRouter, HandlerProps } from './lambda-handler.router';
+import { Router } from "./router";
+import { HandlerProps } from "./router/base.router";
 
 export const handler = async (event: HandlerProps) => {
   console.log('Functions params: ', JSON.stringify(event, null, 2));
 
-  const router = new ControllerRouter(event, []);
+  const router = new Router(event, []);
 
   return router.route();
 };

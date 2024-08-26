@@ -22,7 +22,7 @@ export class ParallelTask extends Parallel {
     super(scope, parallelTaskName, {
       ...props,
       resultSelector: {
-        parallelTaskName,
+        parallelTaskName: JsonPath.stateName,
         payload: JsonPath.entirePayload,
       },
     });
@@ -43,6 +43,11 @@ export class ParallelTask extends Parallel {
   }
 
   public branch(...branches: IChainable[]): this {
+    for (const branch of branches as any) {
+      if (branch.catches.length > 0) {
+        throw new Error('Parallel branches with catch are not allowed');
+      }
+    }
     super.branch(...branches);
     return this;
   }
@@ -64,7 +69,7 @@ export class ParallelTask extends Parallel {
         payloadResponseOnly: true,
         payload: TaskInput.fromObject({
           stateName: JsonPath.stateName,
-          input: JsonPath.objectAt('$'),
+          metadata: JsonPath.objectAt('$'),
         }),
         retryOnServiceExceptions: false,
       }

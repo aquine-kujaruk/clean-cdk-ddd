@@ -54,6 +54,7 @@
     "@aws-sdk/lib-dynamodb": "^3.577.0",
     "@aws-sdk/util-dynamodb": "^3.577.0",
     "aws-lambda": "^1.0.7",
+    "axios": "^1.7.5",
     "change-case-all": "^2.1.0",
     "dayjs": "^1.11.11",
     "zod": "^3.23.8"

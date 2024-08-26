@@ -11,14 +11,7 @@ cdk.out
 deployment-manifest.*
 
 yarn-error.log
-
-lib/poc-examples
-
-!modules/backend/lib/lambda-functions/lambda-layers/code/libraries/nodejs/node_modules
-
 .favorites.json
 
-modules/pocs
-modules/websocket
-modules/revers-proxy-pmin
+run.ts
 

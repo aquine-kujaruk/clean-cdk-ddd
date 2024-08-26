@@ -5,6 +5,8 @@ import { GenerateEntityIdService } from '../services/generate-entity-id.service'
 export class Book extends BaseEntity {
   public readonly id: string;
   public readonly name: string;
+  public readonly author: string;
+  public readonly description: string;
   public readonly commentsCount: number;
 
   constructor(props: BookProps) {
@@ -14,6 +16,8 @@ export class Book extends BaseEntity {
 
     this.id = props.id;
     this.name = props.name;
+    this.author = props.author;
+    this.description = props.description;
     this.commentsCount = props.commentsCount || 0;
   }
 

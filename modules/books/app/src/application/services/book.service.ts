@@ -9,10 +9,18 @@ export class BookService {
     private readonly bookRepository: IBookRepository
   ) {}
 
-  createBook(name: string): Book {
+  async fetchBookAuthor(name: string): Promise<{ author: string }> {
+    return this.bookRepository.fetchBookAuthor(name);
+  }
+
+  async fetchBookDescription(name: string): Promise<{ description: string }> {
+    return this.bookRepository.fetchBookDescription(name);
+  }
+
+  createBook(name: string, author: string, description: string): Book {
     const identifier = this.identifierRepository.generate();
 
-    return Book.create(identifier, { name });
+    return Book.create(identifier, { name, author, description });
   }
 
   async saveBook(book: Book): Promise<void> {

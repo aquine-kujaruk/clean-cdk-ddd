@@ -109,7 +109,7 @@ export class S3MapTask extends CustomState {
       payloadResponseOnly: true,
       payload: TaskInput.fromObject({
         stateName: JsonPath.stateName,
-        input: JsonPath.objectAt('$'),
+        metadata: JsonPath.objectAt('$'),
       }),
       retryOnServiceExceptions: false,
     });

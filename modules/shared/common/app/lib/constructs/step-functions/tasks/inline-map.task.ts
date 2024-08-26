@@ -5,6 +5,7 @@ import {
   JsonPath,
   Map,
   MapProps,
+  Pass,
   ProcessorMode,
   ProcessorType,
   RetryProps,
@@ -19,7 +20,7 @@ interface InlineMapTaskProps
   extends Omit<MapProps, 'itemsPath' | 'itemSelector' | 'resultSelector'> {
   itemsPath: string;
   executionType?: ProcessorType;
-  mapProcessor: TaskStateBase | Chain;
+  mapProcessor: TaskStateBase | Chain | Pass;
 }
 
 export class InlineMapTask extends Map {
@@ -33,7 +34,7 @@ export class InlineMapTask extends Map {
     super(scope, mapTaskName, {
       ...mapProps,
       itemSelector: {
-        'context.$': '$.context',
+        'payload.$': '$',
         'input.$': '$$.Map.Item.Value',
       },
       resultSelector: {
@@ -64,7 +65,7 @@ export class InlineMapTask extends Map {
       payloadResponseOnly: true,
       payload: TaskInput.fromObject({
         stateName: JsonPath.stateName,
-        input: JsonPath.objectAt('$'),
+        metadata: JsonPath.objectAt('$'),
       }),
       retryOnServiceExceptions: false,
     });

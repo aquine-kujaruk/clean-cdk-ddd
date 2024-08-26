@@ -16,10 +16,8 @@ const commentService = new CommentService(
 );
 
 export class CommentController extends BaseController {
-  static async createComment(input: any) {
-    const { bookId, content } = input;
-
-    return commentService.createComment(bookId, content);
+  static async createComment({ body, path }: any) {
+    return commentService.createComment(path?.bookId, body?.content);
   }
 
   static async saveComment(input: any) {
@@ -32,5 +30,12 @@ export class CommentController extends BaseController {
     const comment = new Comment(input);
 
     return commentService.sendCommentCreatedEvent(comment);
+  }
+
+  static async formatComments({ body, path }: any) {
+    return body?.comments.map((content: string) => ({
+      bookId: path.bookId,
+      content,
+    }));
   }
 }

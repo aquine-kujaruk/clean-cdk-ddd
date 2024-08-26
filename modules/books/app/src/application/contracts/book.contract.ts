@@ -9,6 +9,10 @@ export type BookWithComments = BookProps & {
 };
 
 export interface IBookRepository {
+  fetchBookAuthor(name: string): Promise<{ author: string }>;
+
+  fetchBookDescription(name: string): Promise<{ description: string }>;
+
   save(book: Book): Promise<void>;
 
   getBookWithComments(bookId: string): Promise<BookWithComments>;

@@ -8,9 +8,7 @@ interface LambdaInvokeTaskProps extends Omit<LambdaInvokeProps, 'payload'> {
   payload: {
     controller: ControllerClassType;
     methodName: string;
-    input?: Record<string, any>;
-    initializeContext?: boolean; // La primera task de un parallel o map debe inicializar el contexto
-    context?: Record<never, never>;
+    input?: Record<string, any> | string;
   };
 }
 
@@ -23,28 +21,20 @@ export class LambdaInvokeTask extends LambdaInvoke {
         `Method [${props.payload.methodName}] not found in controller [${props.payload.controller.name}]`
       );
 
-    let payload = {
-      context: JsonPath.objectAt('$.context'),
-      stateName: JsonPath.stateName,
-      ...props.payload,
-      controller: props.payload.controller.name,
-    };
-
-    if (props.payload.initializeContext) {
-      const { context, ...rest } = payload;
-      payload = { ...rest, context: {} };
-    }
-
-    // Se revisa el input por que se supone que viene vacío luego de un map o un parallel
-    if (!props.payload.initializeContext && !payload.input) {
-      const { context, input, ...rest } = payload;
-      payload = { ...rest, context: {}, input: JsonPath.objectAt('$') };
-    }
-
     super(scope, id, {
       retryOnServiceExceptions: false,
       ...props,
-      payload: TaskInput.fromObject(payload)
+      payload: TaskInput.fromObject({
+        controller: props.payload.controller.name,
+        methodName: props.payload.methodName,
+        input: props.payload.input,
+        metadata: {
+          stateMachine: JsonPath.stateMachineName,
+          executionId: JsonPath.executionName,
+          lambdaStateName: JsonPath.stateName,
+          payload: JsonPath.entirePayload,
+        },
+      }),
     });
   }
 

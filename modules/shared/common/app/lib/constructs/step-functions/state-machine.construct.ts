@@ -4,6 +4,7 @@ import {
   DefinitionBody,
   IStateMachine,
   LogLevel,
+  State,
   StateMachine,
   StateMachineProps,
   StateMachineType,
@@ -93,7 +94,7 @@ export class StateMachineConstruct extends BaseConstruct<StateMachineConstructPr
     // Tiene que ser así para que tenga el scope correcto
     const { definitionChain } = new this.props.definitionJob(this);
 
-    this.validateStartState(definitionChain.startState);
+    // this.validateStartState(definitionChain.startState);
 
     const { logGroup } = new LogGroupConstruct(this, `/aws/vendedlogs/states/${stateMachineName}`);
 
